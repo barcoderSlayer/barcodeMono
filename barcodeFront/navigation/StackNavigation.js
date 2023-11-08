@@ -9,6 +9,7 @@ import Ranking from '../screens/Ranking';
 import Camera from '../screens/Camera';
 import Search from '../screens/Search';
 import MyPage from '../screens/MyPage';
+import Home2 from '../screens/Home2';
 
 
 
@@ -18,7 +19,8 @@ const Stack = createStackNavigator();
 const HomeStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Home'>
-            <Stack.Screen name="Home" component={Home} />            
+            <Stack.Screen name="HomeScreen" component={Home} /> 
+            <Stack.Screen name="Home2" component={Home2}/>     
         </Stack.Navigator>
     );
 };
@@ -26,7 +28,7 @@ const HomeStackNavigator = () => {
 const RankingStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Ranking' > 
-            <Stack.Screen name="Ranking" component={Ranking} />
+            <Stack.Screen name="RankingScreen" component={Ranking} />
         </Stack.Navigator>
     );
 };
@@ -34,7 +36,7 @@ const RankingStackNavigator = () => {
 const CameraStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Camera'>
-            <Stack.Screen name="Camera" component={Camera} />
+            <Stack.Screen name="CameraScreen" component={Camera} />
         </Stack.Navigator>
     )
 }
@@ -42,7 +44,7 @@ const CameraStackNavigator = () => {
 const SearchStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Search'>
-            <Stack.Screen name="Search" component={Search} />
+            <Stack.Screen name="SearchScreen" component={Search} />
         </Stack.Navigator>
     )
 }
@@ -59,7 +61,7 @@ const MyPageStackNavigator = ({ navigation, route }) => {
     }, [navigation, route]);
     return (
         <Stack.Navigator initialRouteName='MyPage'>
-            <Stack.Screen name="MyPage" component={MyPage} />
+            <Stack.Screen name="MyPageScreen" component={MyPage} />
         </Stack.Navigator>
     );
 };
