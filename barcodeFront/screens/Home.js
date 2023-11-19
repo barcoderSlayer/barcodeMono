@@ -24,7 +24,7 @@ export default class Home2 extends Component {
           sliderBoxHeight={300}
           onCurrentImagePressed={index => {
             console.warn(`image ${index} pressed`);
-            const screens = ['Home2', 'Home2', 'Home2']; // 스크린 이름 배열
+            const screens = ['HospitalTips', 'PharmaceuticalTips', 'ConvenienceTip']; // 스크린 이름 배열
             const targetScreen = screens[index];
             if (targetScreen) {
               this.props.navigation.navigate(targetScreen); // 해당 스크린으로 이동
@@ -68,7 +68,7 @@ export default class Home2 extends Component {
           <View style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>의약품</Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("Home2",{screen:'Home2'})}>
+          <TouchableOpacity onPress={() => navigation.navigate("PharmaceuticalTips",{screen:'PharmaceuticalTips'})}>
             <View style={styles.tipTextContainer}>
               <Text style={styles.tipText}>
                 <Text style={{ marginLeft: 40 }}>             의약품 팁 보러가기                     {'>'}</Text>
@@ -79,7 +79,7 @@ export default class Home2 extends Component {
           <View style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>병원</Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("Home2",{screen:'Home2'})}>
+          <TouchableOpacity onPress={() => navigation.navigate("HospitalTips",{screen:'HospitalTips'})}>
             <View style={styles.tipTextContainer}>
               <Text style={styles.tipText}>
                 <Text style={{ marginLeft: 40 }}>             병원 팁 보러가기                         {'>'}</Text>
@@ -87,12 +87,12 @@ export default class Home2 extends Component {
             </View>
           </TouchableOpacity>
           <View style={styles.categoryContainer}>
-            <Text style={styles.categoryTitle}>세면도구</Text>
+            <Text style={styles.categoryTitle}>편의점</Text>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("Home2",{screen:'Home2'})}>
+          <TouchableOpacity onPress={() => navigation.navigate("ConvenienceTip",{screen:'ConvenienceTip'})}>
             <View style={styles.tipTextContainer}>
               <Text style={styles.tipText}>
-                <Text style={{ marginLeft: 40 }}>             세면도구 팁 보러가기                  {'>'}</Text> 
+                <Text style={{ marginLeft: 40 }}>             편의점 팁 보러가기                  {'>'}</Text> 
               </Text>
             </View>
           </TouchableOpacity>
