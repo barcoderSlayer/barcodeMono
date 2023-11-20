@@ -3,9 +3,9 @@
 
 const express = require('express');
 const router = express.Router();
-
-
 const mysql = require('mysql');
+
+//db key config로 관리하기
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -37,12 +37,12 @@ router.get('/', (req,res) => {
     res.send(responseObject);
 });
 
+
 router.get('/:barcodeNumber', (req,res) => {
     const userId = req.params.userId;
     //db 조회 로직
     //res.send(`get productName : ${productName}`)
 })
-
 
 module.exports = router;
 

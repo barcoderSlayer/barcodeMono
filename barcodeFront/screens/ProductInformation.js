@@ -13,66 +13,66 @@ import axios from 'axios';
 
 export default function ProductInformation({ route }) {
 
+
     const [imgUrl,setImgUrl]= useState({});
-    const [productNameEn,setProductNameEn]= useState({}); //영어 상품이름
+    const [productData, setProductData]= useState({}); //영어 상품이름
+    
 
     const navigation = useNavigation();
     const {barcodeData} = route.params;
 
 
 
-
     useEffect(()=>{
         setImgUrl({url:"https://reactnative.dev/img/tiny_logo.png"}); //이미지 url 세팅
+        console.log("barcodeData = ", barcodeData);
+        getData();
 
-        //get요청
-        const fetchData = async () => {
-            try {
-                const respose = await axios.get('http://localhost:3000');
-                setProductNameEn(respose.data);
-            }catch(error){
-                console.error('Error fetching data, error');
-            }
-        }
-        fetchData();
     },[]);
 
-    console.log("barcodeData = ", barcodeData);
+    // data get요청
+    const getData = async() =>{
+        const response = await axios.get('http://localhost:3000/')
+        .then(function (response) {
+            console.log(response.data);
 
+        })
+        .catch(function (error){
+            console.log(error);
+        });
+    }
 
+    const handlePress = () => {
+        console.log("버튼 클릭 했네요 요청하겠습니다.")
+        getData();
+    }
 
-
-
-
-
-
-
-return (
-    <View style={styles.container}>
-        <View style={styles.imageContainer}>
-            <Image style={styles.image} source={{uri:"https://reactnative.dev/img/tiny_logo.png"}}/>
+    return (
+        <View style={styles.container}>
+            <View style={styles.imageContainer}>
+                <Image style={styles.image} source={{uri:"https://reactnative.dev/img/tiny_logo.png"}}/>
+            </View>
+            <Text>{barcodeData}</Text>
+            <Button title="click get object start" onPress={handlePress}/>
         </View>
-        <Text>{barcodeData}</Text>
-    </View>
-);
-}
+    );
+    }
 
 const styles = StyleSheet.create({
-container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-},
-imageContainer:{
-    flex:1,
-    borderBottomWidth:1,
-    borderBottomColor:'red',
-},
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imageContainer:{
+        // flex:1,
+        borderBottomWidth:1,
+        borderBottomColor:'red',
+    },
 
-image:{
-    width:100,
-    height:100,
-}
-
+    image:{
+        width:100,
+        height:100,
+    }
 });
