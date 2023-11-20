@@ -6,10 +6,14 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 //----------page import----------
 import Home from '../screens/Home';
 import Ranking from '../screens/Ranking';
-import Camera from '../screens/Camera';
+
 import Search from '../screens/Search';
 import MyPage from '../screens/MyPage';
 import Home2 from '../screens/Home2';
+
+//========== Camera ==========
+import Camera from '../screens/Camera';
+import ProductInformation from '../screens/ProductInformation';
 
 
 
@@ -37,7 +41,10 @@ const CameraStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Camera'>
             <Stack.Screen name="CameraScreen" component={Camera} />
+            <Stack.Screen name="ProductInformationScreen" component={ProductInformation} />
         </Stack.Navigator>
+
+
     )
 }
 

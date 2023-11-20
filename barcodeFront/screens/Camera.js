@@ -27,10 +27,11 @@
             setScanned(true);
     
             // 바코드 데이터를 다음 페이지로 전달하면서 이동
-            navigation.navigate("ProductIInformation", { barcodeData: data });
+            navigation.navigate("ProductInformationScreen", { barcodeData: data });
         };
 
 
+        //카메라 권한 요청 // 권한 확인
         if (hasPermission === null) {
             return <Text>카메라 권한 요청 중</Text>;
         }
