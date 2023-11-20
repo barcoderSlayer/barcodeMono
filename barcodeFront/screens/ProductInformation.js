@@ -13,7 +13,8 @@ import axios from 'axios';
 
 export default function ProductInformation({ route }) {
 
-    const [imgUrl,setImgUrl]= useState({url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSadrBhDVEHRPgVXxU7ZGFoyl7r69E6iHOLWA&usqp=CAU"});
+    const [imgUrl,setImgUrl]= useState({});
+    const [productNameEn,setProductNameEn]= useState({}); //영어 상품이름
 
     const navigation = useNavigation();
     const {barcodeData} = route.params;
@@ -22,19 +23,19 @@ export default function ProductInformation({ route }) {
 
 
     useEffect(()=>{
-        setImgUrl({url:"https://reactnative.dev/img/tiny_logo.png"});
+        setImgUrl({url:"https://reactnative.dev/img/tiny_logo.png"}); //이미지 url 세팅
 
         //get요청
         const fetchData = async () => {
             try {
-                const respose = await axios.get('http://localhost:3307')
-                SVGMetadataElement(response.data);
+                const respose = await axios.get('http://localhost:3000');
+                setProductNameEn(respose.data);
             }catch(error){
                 console.error('Error fetching data, error');
             }
         }
         fetchData();
-    },[])
+    },[]);
 
     console.log("barcodeData = ", barcodeData);
 
