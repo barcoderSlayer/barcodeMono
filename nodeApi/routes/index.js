@@ -23,25 +23,31 @@ db.connect((err) => {
         if (err) throw err;
         console.log(result);
     })
-
 })
 
-//router로 get 요청받기
+
+//router로 get 요청받기 test
 router.get('/', (req,res) => {
     const responseObject ={
         key: 'value',
         key2: 'value2'
         //costom
     };
-
-    res.send(responseObject);
+    res.send(barcodeData);
 });
 
-
-router.get('/:barcodeNumber', (req,res) => {
-    const userId = req.params.userId;
-    //db 조회 로직
-    //res.send(`get productName : ${productName}`)
+//barcodePage
+router.get('/barcodePage/', (req,res) => {
+    const barcodeData = req.query.barcodeData;
+    console.log('barcodePage 요청 data :', barcodeData )
+    
+    const sql = `select * from products where barcodeNum = '${barcodeData}'`;
+    db.query(sql, (err, result) => {
+        if (err) throw err;
+        console.log(result);
+        res.send(result);
+    })
+    
 })
 
 module.exports = router;

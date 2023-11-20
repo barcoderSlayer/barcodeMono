@@ -32,10 +32,9 @@ export default function ProductInformation({ route }) {
 
     // data get요청
     const getData = async() =>{
-        const response = await axios.get('http://localhost:3000/')
+        const response = await axios.get(`http://192.168.0.41:3000/barcodePage/?barcodeData=${barcodeData}`)
         .then(function (response) {
             console.log(response.data);
-
         })
         .catch(function (error){
             console.log(error);
@@ -46,7 +45,6 @@ export default function ProductInformation({ route }) {
         console.log("버튼 클릭 했네요 요청하겠습니다.")
         getData();
     }
-
     return (
         <View style={styles.container}>
             <View style={styles.imageContainer}>
