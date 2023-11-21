@@ -22,10 +22,76 @@ const HomeStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Home'>
             <Stack.Screen name="HomeScreen" component={Home} />
-            <Stack.Screen name="Home2" component={Home2}/>
-            <Stack.Screen name="HospitalTips" component={HospitalTips} />
-            <Stack.Screen name="PharmaceuticalTips" component={PharmaceuticalTips} />
-            <Stack.Screen name="ConvenienceTip" component={ConvenienceTip} />
+            <Stack.Screen
+                name="Home"
+                component={Home}
+                options={{
+                    title: '홈',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5',
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleStyle: {
+                        fontWeight: 'bold', 
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="Home2"
+                component={Home2}
+                options={{
+                    title: '홈2',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5',
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="HospitalTips"
+                component={HospitalTips}
+                options={{
+                    title: '팁',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5',
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="PharmaceuticalTips"
+                component={PharmaceuticalTips}
+                options={{
+                    title: '팁',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5',
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="ConvenienceTip"
+                component={ConvenienceTip}
+                options={{
+                    title: '팁',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5',
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                }}
+            />
         </Stack.Navigator>
         
     );
