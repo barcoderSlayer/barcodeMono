@@ -14,13 +14,13 @@
         const isFocused = useIsFocused();
 
 
-        
+        //다시 스캔하기 버튼 누를시 scanned상태 변경
         useEffect(() => {
             (async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
             setHasPermission(status === 'granted');
             })();
-        }, [isFocused]);
+        }, [isFocused, scanned]);
 
 
         const handleBarCodeScanned = ({ type, data }) => {

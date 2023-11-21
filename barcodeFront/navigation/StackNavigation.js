@@ -41,7 +41,12 @@ const CameraStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Camera'>
             <Stack.Screen name="CameraScreen" component={Camera} />
-            <Stack.Screen name="ProductInformationScreen" component={ProductInformation} />
+            <Stack.Screen name="ProductInformationScreen" component={ProductInformation}
+                options={{
+                    headerShown: false,
+                    headerTintColor:"green",
+                }}
+            />
         </Stack.Navigator>
 
 
