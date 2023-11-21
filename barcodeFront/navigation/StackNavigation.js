@@ -1,75 +1,53 @@
-//stack Navigation
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//----------page import----------
-import Home from '../screens/Home';
-import Ranking from '../screens/Ranking';
+// 스크린 컴포넌트 임포트
+import LanguageSelectionScreen from './screens/LanguageSelectionScreen';
+import Home from './screens/Home';
+import Ranking from './screens/Ranking';
+import Camera from './screens/Camera';
+import Search from './screens/Search';
+import MyPage from './screens/MyPage';
+import Home2 from './screens/Home2';
 
-import Search from '../screens/Search';
-import MyPage from '../screens/MyPage';
-import Home2 from '../screens/Home2';
-
-//========== Camera ==========
-import Camera from '../screens/Camera';
-import ProductInformation from '../screens/ProductInformation';
-
-
-
-// 모듈 변수 선언
 const Stack = createStackNavigator();
 
-const HomeStackNavigator = () => {
-    return (
-        <Stack.Navigator initialRouteName='Home'>
-            <Stack.Screen name="HomeScreen" component={Home} /> 
-            <Stack.Screen name="Home2" component={Home2}/>     
-        </Stack.Navigator>
-    );
-};
+function App() {
+  const [isLanguageSelected, setIsLanguageSelected] = useState(false);
 
-const RankingStackNavigator = () => {
-    return (
-        <Stack.Navigator initialRouteName='Ranking' > 
-            <Stack.Screen name="RankingScreen" component={Ranking} />
-        </Stack.Navigator>
-    );
-};
+  useEffect(() => {
+    const checkLanguageSetting = async () => {
+      const savedLanguage = await AsyncStorage.getItem('selectedLanguage');
+      setIsLanguageSelected(!!savedLanguage);
+    };
 
-const CameraStackNavigator = () => {
-    return (
-        <Stack.Navigator initialRouteName='Camera'>
-            <Stack.Screen name="CameraScreen" component={Camera} />
-            <Stack.Screen name="ProductInformationScreen" component={ProductInformation} />
-        </Stack.Navigator>
+    checkLanguageSetting();
+  }, []);
 
-
-    )
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        {!isLanguageSelected ? (
+          <Stack.Screen
+            name="LanguageSelection"
+            component={LanguageSelectionScreen}
+            options={{ headerShown: false }}
+          />
+        ) : (
+          <>
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Home2" component={Home2} />
+            <Stack.Screen name="Ranking" component={Ranking} />
+            <Stack.Screen name="Camera" component={Camera} />
+            <Stack.Screen name="Search" component={Search} />
+            <Stack.Screen name="MyPage" component={MyPage} />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
 
-const SearchStackNavigator = () => {
-    return (
-        <Stack.Navigator initialRouteName='Search'>
-            <Stack.Screen name="SearchScreen" component={Search} />
-        </Stack.Navigator>
-    )
-}
-
-const MyPageStackNavigator = ({ navigation, route }) => {
-    // 하단 탭바 제거
-    React.useLayoutEffect(() => {
-        const routeName = getFocusedRouteNameFromRoute(route);
-        if (routeName === 'MyPage') {
-            navigation.setOptions({ tabBarStyle: { display: undefined } });
-        } else {
-            navigation.setOptions({ tabBarStyle: { display: 'none' } }, { screenOptions: { headerShown: false } });
-        }
-    }, [navigation, route]);
-    return (
-        <Stack.Navigator initialRouteName='MyPage'>
-            <Stack.Screen name="MyPageScreen" component={MyPage} />
-        </Stack.Navigator>
-    );
-};
-export { HomeStackNavigator, RankingStackNavigator, CameraStackNavigator, SearchStackNavigator, MyPageStackNavigator };
+export default App;
