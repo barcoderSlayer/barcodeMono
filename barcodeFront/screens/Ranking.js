@@ -1,13 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import React from 'react';
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 
-export default function Ranking() {
+export default function Ranking({ navigation }) {
   // Generate 10 items
   const items = Array.from({ length: 10 }, (_, index) => (
-    <View key={index} style={styles.roundedRectangle}>
+    <TouchableOpacity
+      key={index}
+      onPress={() => navigation.navigate('ProductInformation', { /* 나중에 바코드 넣어야지 */ })}
+      style={styles.roundedRectangle}
+    >
       <View style={styles.imageContainer}>
-        <Image
+        <Image  
           source={require('../assets/icon.png')}
           style={styles.imageStyle}
         />
@@ -17,7 +20,7 @@ export default function Ranking() {
         <Text style={styles.productName}>상품명</Text>
         <Text style={styles.rating}>10/10</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   ));
 
   return (
@@ -25,10 +28,12 @@ export default function Ranking() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {items}
       </ScrollView>
-      <StatusBar style="auto" />
     </View>
   );
 }
+
+// styles 생략
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -77,5 +82,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 1, // Adjust the margin-bottom as needed
-  },
+  },   
 });
+    
