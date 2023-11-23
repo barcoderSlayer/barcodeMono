@@ -1,14 +1,14 @@
-//LanguageModi.js
-
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const window = Dimensions.get('window');
 
 const LanguageButton = ({ language, onPress, isSelected }) => {
   const backgroundColor = isSelected ? 'grey' : 'black';
   return (
     <TouchableOpacity
-      style={[styles.languageButton, { backgroundColor }]}
+      style={[styles.languageButton, { backgroundColor, width: window.width * 0.8 }]}
       onPress={() => onPress(language)}
     >
       <Text style={[styles.languageText, { color: isSelected ? 'white' : 'white' }]}>
@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   languageButton: {
-    width: '80%',
     padding: 15,
     margin: 10,
     borderRadius: 5,

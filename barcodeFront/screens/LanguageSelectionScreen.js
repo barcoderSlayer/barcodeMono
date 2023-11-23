@@ -1,19 +1,18 @@
-// LanguageSelectionScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
+const window = Dimensions.get('window');
+
 const LanguageButton = ({ language, onPress, isSelected }) => {
   const backgroundColor = isSelected ? 'grey' : 'black';
-  const textColor = isSelected ? 'white' : 'white';
-
   return (
     <TouchableOpacity
       style={[styles.languageButton, { backgroundColor }]}
       onPress={onPress}
     >
-      <Text style={[styles.languageText, { color: textColor }]}>
+      <Text style={[styles.languageText, { color: isSelected ? 'white' : 'white' }]}>
         {language}
       </Text>
     </TouchableOpacity>
@@ -24,11 +23,9 @@ export default function LanguageSelectionScreen() {
   const [selectedLanguage, setSelectedLanguage] = useState(null);
   const navigation = useNavigation();
 
-  // 컴포넌트가 마운트될 때 저장된 언어 설정을 확인합니다.
   useEffect(() => {
     const checkLanguageSetting = async () => {
       const savedLanguage = await AsyncStorage.getItem('selectedLanguage');
-      // 저장된 언어 설정이 있다면, LanguageSelectionScreen을 건너뛰고 Home 화면으로 이동합니다.
       if (savedLanguage) {
         navigation.navigate('HomeScreen');
       }
@@ -45,7 +42,7 @@ export default function LanguageSelectionScreen() {
   const handleConfirm = async () => {
     if (selectedLanguage) {
       await AsyncStorage.setItem('selectedLanguage', selectedLanguage);
-      navigation.navigate('HomeScreen'); // 'HomeScreen'으로 이동합니다.
+      navigation.navigate('HomeScreen');
     }
   };
 
@@ -89,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   languageButton: {
-    width: '80%',
+    width: window.width * 0.8,
     padding: 15,
     margin: 10,
     borderRadius: 5,
