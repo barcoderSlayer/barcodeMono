@@ -4,13 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // 스크린 컴포넌트 임포트
-import LanguageSelectionScreen from './screens/LanguageSelectionScreen';
-import Home from './screens/Home';
-import Ranking from './screens/Ranking';
-import Camera from './screens/Camera';
-import Search from './screens/Search';
-import MyPage from './screens/MyPage';
-import Home2 from './screens/Home2';
+import LanguageSelectionScreen from '../screens/LanguageSelectionScreen';
+import Home from '../screens/Home';
+import Ranking from '../screens/Ranking';
+import Camera from '../screens/Camera';
+import Search from '../screens/Search';
+import MyPage from '../screens/MyPage';
+import Home2 from '../screens/Home2';
 
 const Stack = createStackNavigator();
 
