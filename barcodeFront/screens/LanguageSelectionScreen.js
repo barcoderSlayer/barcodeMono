@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,12 +8,14 @@ const window = Dimensions.get('window');
 
 const LanguageButton = ({ language, onPress, isSelected }) => {
   const backgroundColor = isSelected ? 'grey' : 'black';
+
   return (
     <TouchableOpacity
       style={[styles.languageButton, { backgroundColor }]}
       onPress={onPress}
     >
       <Text style={[styles.languageText, { color: isSelected ? 'white' : 'white' }]}>
+
         {language}
       </Text>
     </TouchableOpacity>
@@ -26,6 +29,7 @@ export default function LanguageSelectionScreen() {
   useEffect(() => {
     const checkLanguageSetting = async () => {
       const savedLanguage = await AsyncStorage.getItem('selectedLanguage');
+
       if (savedLanguage) {
         navigation.navigate('HomeScreen');
       }
@@ -43,6 +47,7 @@ export default function LanguageSelectionScreen() {
     if (selectedLanguage) {
       await AsyncStorage.setItem('selectedLanguage', selectedLanguage);
       navigation.navigate('HomeScreen');
+
     }
   };
 
@@ -87,6 +92,7 @@ const styles = StyleSheet.create({
   },
   languageButton: {
     width: window.width * 0.8,
+
     padding: 15,
     margin: 10,
     borderRadius: 5,
@@ -98,4 +104,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
+
 });
+
