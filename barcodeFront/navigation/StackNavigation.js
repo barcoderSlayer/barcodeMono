@@ -4,9 +4,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 //----------page import----------
-import Home from '../screens/Home';
-import Ranking from '../screens/Ranking';
 
+//------------ Home ------------- 
+import Home from '../screens/Home';
+import HospitalTips from '../screens/HospitalTips'
+import PharmaceuticalTips from '../screens/PharmaceuticalTips'
+import ConvenienceTip from '../screens/ConvenienceTip'
+
+
+import Ranking from '../screens/Ranking';
 import Search from '../screens/Search';
 import MyPage from '../screens/MyPage';
 import Home2 from '../screens/Home2';
@@ -25,6 +31,9 @@ const HomeStackNavigator = () => {
         <Stack.Navigator initialRouteName='Home'>
             <Stack.Screen name="HomeScreen" component={Home} /> 
             <Stack.Screen name="Home2" component={Home2}/>     
+            <Stack.Screen name="HospitalTips" component={HospitalTips}/>
+            <Stack.Screen name="PharmaceuticalTips" component={PharmaceuticalTips}/>
+            <Stack.Screen name="ConvenienceTip" component={ConvenienceTip}/>
         </Stack.Navigator>
     );
 };
@@ -62,8 +71,6 @@ const CameraStackNavigator = () => {
                 }}
             />
         </Stack.Navigator>
-
-
     )
 }
 

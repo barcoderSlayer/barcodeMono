@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
 
 export default function Ranking({ navigation }) {
   // Generate 10 items
   const items = Array.from({ length: 10 }, (_, index) => (
     <TouchableOpacity
       key={index}
-      onPress={() => navigation.navigate('ProductInformation', { /* 나중에 바코드 넣어야지 */ })}
+      onPress={() => navigation.navigate('ProductInformationScreen', { /* 나중에 바코드 넣어야지 */ })}
       style={styles.roundedRectangle}
     >
       <View style={styles.imageContainer}>
