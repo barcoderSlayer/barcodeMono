@@ -31,11 +31,25 @@ const HomeStackNavigator = () => {
 
 const RankingStackNavigator = () => {
     return (
-        <Stack.Navigator initialRouteName='Ranking' > 
-            <Stack.Screen name="RankingScreen" component={Ranking} />
+        <Stack.Navigator initialRouteName='Ranking'>
+            <Stack.Screen
+                name="RankingScreen"
+                component={Ranking}
+                options={{
+                    title: '랭킹',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
+                    },
+                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
+                    headerTitleStyle: {
+                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
+                    },
+                }}
+            />
         </Stack.Navigator>
     );
 };
+
 
 const CameraStackNavigator = () => {
     return (
