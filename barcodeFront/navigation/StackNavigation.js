@@ -4,16 +4,18 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 //----------page import----------
-
 import Home from '../screens/Home';
 import Ranking from '../screens/Ranking';
-import Camera from '../screens/Camera';
+
 import Search from '../screens/Search';
 import MyPage from '../screens/MyPage';
 import Home2 from '../screens/Home2';
-import HospitalTips from '../screens/HospitalTips';
-import PharmaceuticalTips from '../screens/PharmaceuticalTips';
-import ConvenienceTip from '../screens/ConvenienceTip';
+
+//========== Camera ==========
+import Camera from '../screens/Camera';
+import ProductInformation from '../screens/ProductInformation';
+
+
 
 // 모듈 변수 선언
 const Stack = createStackNavigator();
@@ -21,79 +23,9 @@ const Stack = createStackNavigator();
 const HomeStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Home'>
-            <Stack.Screen name="HomeScreen" component={Home} />
-            <Stack.Screen
-                name="Home"
-                component={Home}
-                options={{
-                    title: '홈',
-                    headerStyle: {
-                        backgroundColor: '#ADA4A5',
-                    },
-                    headerTintColor: '#fff',
-                    headerTitleStyle: {
-                        fontWeight: 'bold', 
-                    },
-                }}
-            />
-            <Stack.Screen
-                name="Home2"
-                component={Home2}
-                options={{
-                    title: '홈2',
-                    headerStyle: {
-                        backgroundColor: '#ADA4A5',
-                    },
-                    headerTintColor: '#fff', 
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                }}
-            />
-            <Stack.Screen
-                name="HospitalTips"
-                component={HospitalTips}
-                options={{
-                    title: '팁',
-                    headerStyle: {
-                        backgroundColor: '#ADA4A5',
-                    },
-                    headerTintColor: '#fff', 
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                }}
-            />
-            <Stack.Screen
-                name="PharmaceuticalTips"
-                component={PharmaceuticalTips}
-                options={{
-                    title: '팁',
-                    headerStyle: {
-                        backgroundColor: '#ADA4A5',
-                    },
-                    headerTintColor: '#fff', 
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                }}
-            />
-            <Stack.Screen
-                name="ConvenienceTip"
-                component={ConvenienceTip}
-                options={{
-                    title: '팁',
-                    headerStyle: {
-                        backgroundColor: '#ADA4A5',
-                    },
-                    headerTintColor: '#fff', 
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                }}
-            />
+            <Stack.Screen name="HomeScreen" component={Home} /> 
+            <Stack.Screen name="Home2" component={Home2}/>     
         </Stack.Navigator>
-        
     );
 };
 
@@ -109,7 +41,15 @@ const CameraStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Camera'>
             <Stack.Screen name="CameraScreen" component={Camera} />
+            <Stack.Screen name="ProductInformationScreen" component={ProductInformation}
+                options={{
+                    headerShown: false,
+                    headerTintColor:"green",
+                }}
+            />
         </Stack.Navigator>
+
+
     )
 }
 
