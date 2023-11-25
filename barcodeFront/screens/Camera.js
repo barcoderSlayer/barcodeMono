@@ -1,7 +1,7 @@
     import React, { useState, useEffect } from 'react';
     import { Text, View, StyleSheet, Button } from 'react-native';
     import { BarCodeScanner } from 'expo-barcode-scanner';
-    import { useNavigation } from "@react-navigation/native";
+    import { useFocusEffect, useNavigation } from "@react-navigation/native";
     import { useIsFocused } from "@react-navigation/native";
 
 
@@ -20,7 +20,7 @@
             const { status } = await BarCodeScanner.requestPermissionsAsync();
             setHasPermission(status === 'granted');
             })();
-        }, [isFocused, scanned]);
+        }, [scanned, useIsFocused]);
 
 
         const handleBarCodeScanned = ({ type, data }) => {
@@ -30,6 +30,11 @@
             navigation.navigate("ProductInformationScreen", { barcodeData: data });
         };
 
+        useEffect(() => {
+            if (isFocused) {
+                setScanned(false);
+            }
+        }, [isFocused])
 
         //카메라 권한 요청 // 권한 확인
         if (hasPermission === null) {
@@ -38,6 +43,11 @@
         if (hasPermission === false) {
             return <Text>카메라 접근 권한이 없습니다.</Text>;
         }
+
+
+
+
+
 
 
 
@@ -53,6 +63,14 @@
             </View>
         );
     }
+
+
+
+
+
+
+
+
 
 
     const styles = StyleSheet.create({

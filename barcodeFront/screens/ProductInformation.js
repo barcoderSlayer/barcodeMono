@@ -73,7 +73,6 @@ export default function ProductInformation({ route }) {
     //     )
     // }
 
-sss
 
     return (
         <View style={styles.container}>
