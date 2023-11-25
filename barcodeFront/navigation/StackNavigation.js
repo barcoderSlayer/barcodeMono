@@ -1,25 +1,30 @@
-// stack Navigation
-import React, { useEffect } from 'react';
+//stack Navigation
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 //----------page import----------
 
-
-//------------ Home ------------- 
+//=========== Home ============= 
 import Home from '../screens/Home';
 import HospitalTips from '../screens/HospitalTips'
 import PharmaceuticalTips from '../screens/PharmaceuticalTips'
-import ConvenienceTip from '../screens/ConvenienceTip';
+import ConvenienceTip from '../screens/ConvenienceTip'
+
+
 import Ranking from '../screens/Ranking';
 import Search from '../screens/Search';
 import MyPage from '../screens/MyPage';
 import Home2 from '../screens/Home2';
 
+//========== Camera ==========
+import Camera from '../screens/Camera';
+import ProductInformation from '../screens/ProductInformation';
+
+
+
 // 모듈 변수 선언
 const Stack = createStackNavigator();
-
 
 const HomeStackNavigator = () => {
     return (
@@ -55,7 +60,7 @@ const RankingStackNavigator = () => {
 };
 
 
-const CameraStackNavigator = () => {
+const CameraStackNavigator = () => { 
     return (
         <Stack.Navigator initialRouteName='Camera'>
             <Stack.Screen name="CameraScreen" component={Camera} />
