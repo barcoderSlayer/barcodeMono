@@ -14,7 +14,7 @@
         const isFocused = useIsFocused();
 
 
-        // 다시 스캔하기 버튼 누를시 scanned 상태 변경
+        //화면 초기에 들어왔을 시 Scanned false상태로바꾸기
         useEffect(() => {
             setScanned(false);
         }, [isFocused]);
@@ -52,11 +52,6 @@
             if (hasPermission === false) {
                 return <Text>카메라 접근 권한이 없습니다.</Text>;
             }
-
-    
-
-
-
 
         return (
             <View style={styles.container}>

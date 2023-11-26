@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View,Image ,Dimensions} from 'react-native';
+import { Button, StyleSheet, Text, View,Image ,Dimensions, ScrollView, Modal} from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import axios from 'axios';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 
 const { width, height } = Dimensions.get('window');
@@ -14,11 +15,23 @@ const { width, height } = Dimensions.get('window');
 export default function ProductInformation({ route }) {
 
 
-    const [imgUrl,setImgUrl]= useState({}); //상품 이미지 url
+    const [imgUrl,setImgUrl]= useState(""); //상품 이미지 url
     const [productData, setProductData]= useState({}); //상품 정보
     const [loading, setLoading]=useState(); //로딩 => 데이터 불러올때 사용
     const [productName,setProductName] = useState(); //상품 이름
     const [productDivision, setProductDivision]=useState();
+    const [modalVisible, setModalVisible] = useState(false); //모달창 보기
+
+
+    //이미지 확대해서 보기 모달창
+    const toggleModal = () => {
+        setModalVisible(!modalVisible);
+    };
+
+      //모달창 클릭해서 모달창 닫기
+    const closeModal=() => {
+        setModalVisible(false);
+    }
     
 
     const navigation = useNavigation();
@@ -38,6 +51,8 @@ export default function ProductInformation({ route }) {
             setProductData(response.data)
             setProductName(response.data[0].productNameKr);
             setProductDivision(response.data[0].division);
+            setImgUrl(response.data[0].imageUrl)
+            console.log(response.data[0].imageUrl)
         })
         .catch(function (error){
             console.log(error);
@@ -79,9 +94,17 @@ export default function ProductInformation({ route }) {
             <View style={styles.titleContainer}>
                 <Text style={{fontWeight:'bold', fontSize:width/18}}>{barcodeData}</Text>
             </View>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <TouchableHighlight onPress={toggleModal}>
             <View style={styles.imageContainer}>
-                <Image style={styles.image} resizeMode='contain' source={require('../assets/imgless.jpeg')}/>
+                {
+                    imgUrl&&
+                    imgUrl ?
+                    <Image style={styles.image} resizeMode='contain' source={{uri:imgUrl}}/> :
+                    <Image style={styles.image} resizeMode='contain' source={require('../assets/imgless.jpeg')}/>
+                }
             </View>
+            </TouchableHighlight>
             <View style={styles.topInfoContainer}>
                 {/* 별갯수 확인 */}
                 {/* {starView()}  */}
@@ -96,7 +119,6 @@ export default function ProductInformation({ route }) {
                 </View>
                 <View style={styles.topInfo}>
                     <Text style={{fontWeight:'bold'}}>분류군</Text>
-                    
                     {
                         productName ?
                         <Text>{productDivision}</Text> :
@@ -113,29 +135,53 @@ export default function ProductInformation({ route }) {
                     <Text style={{fontWeight:'bold'}}>구성성분</Text>
                     <Text style={{marginLeft:width/5}}>구성성분text</Text>
                 </View>
-
             </View>
             {titleName}
-            
             <Button title="click get object start" onPress={handlePress}/>
+            </ScrollView>
+             {/* 모달창 세팅 */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    alert("Modal has been closed.");
+                    setModalVisible(!modalVisible);
+                }}
+            >
+            {/* <TouchableHighlight onPress={closeModal}> */}
+            <View style={styles.modalContainer}>
+                <TouchableHighlight onPress={toggleModal}>
+                    <Image style={styles.modalImage} resizeMode='contain' source={{ uri: imgUrl }} />
+                </TouchableHighlight>
+            </View>
+            {/* </TouchableHighlight> */}
+            </Modal>
+        {/* 모달 끝 */}
         </View>
     );
-    }
+}
 
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow:1,
         backgroundColor: '#fff',
         alignItems: 'center',
         
     },
     titleContainer: {
         backgroundColor:'#ada4a5',
-        height:height/10,
+        height:100,
         width:width,
         justifyContent:'center',
         alignItems:'center',
+    },
+
+    scrollContainer:{
+        // flex:1,
+        backgroundColor:'#fff',
+        alignItems:'center'
     },
     imageContainer:{
         // flex:1,
@@ -149,8 +195,8 @@ const styles = StyleSheet.create({
     },
 
     image:{
-        width:width/3,
-        height:height,
+        width:width,
+        height:height/5,
         
     },
 
@@ -188,7 +234,24 @@ const styles = StyleSheet.create({
     bottomInfoBox:{
         flexDirection:'column',
         
-
-        
+    },
+    //모달창 스타일
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.9)',
+    },
+    modalImage: {
+        width: width,
+        height: height/2,
+    },
+    closeButton: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        padding: 10,
+        backgroundColor: 'rgba(255,255,255,0.3)',
+        borderRadius: 5,
     },
 });
