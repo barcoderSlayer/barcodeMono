@@ -99,7 +99,7 @@ export default function ProductInformation({ route }) {
                     
                     {
                         productName ?
-                        <Text>{productDivision}</Text>:
+                        <Text>{productDivision}</Text> :
                         null
                     }
                 </View>
