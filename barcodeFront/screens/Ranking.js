@@ -3,7 +3,7 @@ import { ScrollView, TouchableOpacity, Image, Text, StyleSheet, View } from 'rea
 import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
 
-export default function Ranking({ navigation }) {
+export default function Ranking({ barcodeData, navigation }) {
   const [rankings, setRankings] = useState([]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function Ranking({ navigation }) {
         {rankings.map((item, index) => (
           <TouchableOpacity
             key={item.barcodeNum}
-            onPress={() => navigation.navigate('ProductInformationScreen', { barcodeNum: item.barcodeNum })}
+            onPress={() => navigation.navigate('ProductInformationScreen', { barcodeData: item.barcodeNum })}
             style={styles.roundedRectangle}
           >
             <View style={styles.imageContainer}>
