@@ -2,13 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import TabNavigation from './navigation/TabNavigation';
-
+// import TabNavigation from './navigation/TabNavigation';
+import HospitalMap from './screens/HospitalMap';
 
 export default function App() {
   return (
     <>
-        <TabNavigation />
+        <HospitalMap/>
+        {/* <TabNavigation /> */}
     </>
   );
 }
