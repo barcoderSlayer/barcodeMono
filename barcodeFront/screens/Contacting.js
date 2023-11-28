@@ -27,7 +27,7 @@ const App = () => {
       <View style={styles.content}>
         {/* Menu */}
         <View style={styles.menu}>
-          <TouchableOpacity style={styles.menuButton}><Text>문의</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.menuButton}><Text>문의하기</Text></TouchableOpacity>
           <TouchableOpacity style={styles.menuButton}><Text>수정 요청</Text></TouchableOpacity>
           <TouchableOpacity style={styles.menuButton}><Text>오류/에러</Text></TouchableOpacity>
           <TouchableOpacity style={styles.menuButton}><Text>기타</Text></TouchableOpacity>
