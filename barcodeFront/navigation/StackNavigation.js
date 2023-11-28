@@ -5,7 +5,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // 스크린 컴포넌트 임포트
-
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 
@@ -34,11 +33,76 @@ const Stack = createStackNavigator();
 const HomeStackNavigator = () => {
     return (
         <Stack.Navigator initialRouteName='Home'>
-            <Stack.Screen name="HomeScreen" component={Home} /> 
-            <Stack.Screen name="Home2" component={Home2}/>     
-            <Stack.Screen name="HospitalTips" component={HospitalTips}/>
-            <Stack.Screen name="PharmaceuticalTips" component={PharmaceuticalTips}/>
-            <Stack.Screen name="ConvenienceTip" component={ConvenienceTip}/>
+            <Stack.Screen 
+                name="HomeScreen" 
+                component={Home} 
+                options={{
+                    title: '홈',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
+                    },
+                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
+                    headerTitleStyle: {
+                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
+                    },
+                }}
+            /> 
+            <Stack.Screen 
+                name="Home2" 
+                component={Home2}
+                options={{
+                    title: '홈2',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
+                    },
+                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
+                    headerTitleStyle: {
+                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
+                    },
+                }}
+            />     
+            <Stack.Screen 
+                name="HospitalTips" 
+                component={HospitalTips}
+                options={{
+                    title: '병원팁',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
+                    },
+                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
+                    headerTitleStyle: {
+                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
+                    },
+                }}
+            />
+            <Stack.Screen 
+                name="PharmaceuticalTips" 
+                component={PharmaceuticalTips}
+                options={{
+                    title: '의약품팁',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
+                    },
+                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
+                    headerTitleStyle: {
+                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
+                    },
+                }}
+            />
+            <Stack.Screen 
+                name="ConvenienceTip" 
+                component={ConvenienceTip}
+                options={{
+                    title: '편의점팁',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
+                    },
+                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
+                    headerTitleStyle: {
+                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
+                    },
+                }}
+            />
         </Stack.Navigator>
     );
 };

@@ -1,39 +1,54 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, TouchableOpacity, Image, Text, StyleSheet, View } from 'react-native';
+import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
 
-export default function Ranking({ navigation }) {
-  // Generate 10 items
-  const items = Array.from({ length: 10 }, (_, index) => (
-    <TouchableOpacity
-      key={index}
-      onPress={() => navigation.navigate('ProductInformationScreen', { /* 나중에 바코드 넣어야지 */ })}
-      style={styles.roundedRectangle}
-    >
-      <View style={styles.imageContainer}>
-        <Image  
-          source={require('../assets/icon.png')}
-          style={styles.imageStyle}
-        />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.topText}>TOP{index + 1}</Text>
-        <Text style={styles.productName}>상품명</Text>
-        <Text style={styles.rating}>10/10</Text>
-      </View>
-    </TouchableOpacity>
-  ));
+export default function Ranking({ barcodeData, navigation }) {
+  const [rankings, setRankings] = useState([]);
+
+  useEffect(() => {
+    const fetchRankings = async () => {
+      try {
+        const response = await axios.get('http://172.30.1.13:3000/api/rankings');
+        console.log('Server Response:', response.data);
+        setRankings(response.data);
+      } catch (error) {
+        console.error('Rankings fetching error:', error);
+      }
+    };
+
+    fetchRankings();
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {items}
-      </ScrollView>
-    </View>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        {rankings.map((item, index) => (
+          <TouchableOpacity
+            key={item.barcodeNum}
+            onPress={() => navigation.navigate('ProductInformationScreen', { barcodeData: item.barcodeNum })}
+            style={styles.roundedRectangle}
+          >
+            <View style={styles.imageContainer}>
+              <Image  
+                source={require('../assets/icon.png')} // 실제 이미지 경로에 맞게 수정하세요
+                style={styles.imageStyle}
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.topText}>TOP{index + 1}</Text>
+              <Text style={styles.productName}>{item.productNameKr}</Text>
+              <Text style={styles.count}>{item.scanCnt}</Text>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
 // styles 생략
+
 
 const styles = StyleSheet.create({
   container: {
@@ -75,7 +90,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20, // 여기에서 상품명과 평점 사이의 간격을 늘림
   },
-  rating: {
+  count: {
     fontSize: 14,
     color: 'gray',
   },
