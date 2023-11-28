@@ -1,59 +1,43 @@
-
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
 
 const window = Dimensions.get('window');
 
 const LanguageButton = ({ language, onPress, isSelected }) => {
   const backgroundColor = isSelected ? 'grey' : 'black';
-
   return (
     <TouchableOpacity
-      style={[styles.languageButton, { backgroundColor }]}
-      onPress={onPress}
+      style={[styles.languageButton, { backgroundColor, width: window.width * 0.8 }]}
+      onPress={() => onPress(language)}
     >
       <Text style={[styles.languageText, { color: isSelected ? 'white' : 'white' }]}>
-
         {language}
       </Text>
     </TouchableOpacity>
   );
 };
 
-export default function LanguageSelectionScreen() {
+export default function LanguageModi() {
   const [selectedLanguage, setSelectedLanguage] = useState(null);
-  const navigation = useNavigation();
 
   useEffect(() => {
-    const checkLanguageSetting = async () => {
+    const getLanguageSetting = async () => {
       const savedLanguage = await AsyncStorage.getItem('selectedLanguage');
-
-      if (savedLanguage) {
-        navigation.navigate('HomeScreen');
-      }
+      setSelectedLanguage(savedLanguage);
     };
 
-    checkLanguageSetting();
-  }, [navigation]);
+    getLanguageSetting();
+  }, []);
 
   const handleLanguageSelect = async (language) => {
     setSelectedLanguage(language);
     await AsyncStorage.setItem('selectedLanguage', language);
   };
 
-  const handleConfirm = async () => {
-    if (selectedLanguage) {
-      await AsyncStorage.setItem('selectedLanguage', selectedLanguage);
-      navigation.navigate('HomeScreen');
-
-    }
-  };
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Select a Language</Text>
+      <Text style={styles.title}>Change Language</Text>
       <LanguageButton
         language="한국어"
         onPress={() => handleLanguageSelect('ko')}
@@ -74,7 +58,6 @@ export default function LanguageSelectionScreen() {
         onPress={() => handleLanguageSelect('zh')}
         isSelected={selectedLanguage === 'zh'}
       />
-      <Button title="Confirm" onPress={handleConfirm} />
     </View>
   );
 }
@@ -91,8 +74,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   languageButton: {
-    width: window.width * 0.8,
-
     padding: 15,
     margin: 10,
     borderRadius: 5,
@@ -104,6 +85,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-
 });
-
