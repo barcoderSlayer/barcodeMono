@@ -7,10 +7,10 @@ const mysql = require('mysql');
 
 //db key config로 관리하기
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: '127.0.0.1',
     user: 'root',
-    password: '4865',
-    database: 'barcoder'
+    password: 'qkrtjdgh123!',
+    database: 'mydatabase'
 })
 
 //db 연결 확인

@@ -1,0 +1,16 @@
+{
+  "name": "barcodemono",
+  "version": "1.0.0",
+  "description": "This repository is barcodeSlayer project of monorepo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "expo": "^49.0.21",
+    "mariadb": "^3.2.2",
+    "react-native-webview": "^13.6.3"
+  }
+}
