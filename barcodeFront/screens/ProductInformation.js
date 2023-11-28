@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 
 import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Text, View,Image ,Dimensions, ScrollView, Modal} from 'react-native';
+import { Button, StyleSheet, Text, View,Image ,Dimensions, ScrollView, Modal, Pressable} from 'react-native';
 
 import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
@@ -51,8 +51,8 @@ export default function ProductInformation({ route }) {
             setProductData(response.data)
             setProductName(response.data[0].productNameKr);
             setProductDivision(response.data[0].division);
-            setImgUrl(response.data[0].imageUrl)
-            console.log(response.data[0].imageUrl)
+            setImgUrl(response.data[0].imageUrl);
+            console.log(response.data[0].imageUrl);
         })
         .catch(function (error){
             console.log(error);
@@ -88,7 +88,6 @@ export default function ProductInformation({ route }) {
     //     )
     // }
 
-
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
@@ -98,7 +97,7 @@ export default function ProductInformation({ route }) {
                 <TouchableHighlight onPress={toggleModal}>
             <View style={styles.imageContainer}>
                 {
-                    imgUrl&&
+                    imgUrl &&
                     imgUrl ?
                     <Image style={styles.image} resizeMode='contain' source={{uri:imgUrl}}/> :
                     <Image style={styles.image} resizeMode='contain' source={require('../assets/imgless.jpeg')}/>
@@ -115,7 +114,6 @@ export default function ProductInformation({ route }) {
                         <Text>{productName}</Text> :
                         <Text>상품을 찾지 못했습니다.</Text>
                     }
-                    
                 </View>
                 <View style={styles.topInfo}>
                     <Text style={{fontWeight:'bold'}}>분류군</Text>
@@ -151,9 +149,9 @@ export default function ProductInformation({ route }) {
             >
             {/* <TouchableHighlight onPress={closeModal}> */}
             <View style={styles.modalContainer}>
-                <TouchableHighlight onPress={toggleModal}>
+                <Pressable onPress={toggleModal}>
                     <Image style={styles.modalImage} resizeMode='contain' source={{ uri: imgUrl }} />
-                </TouchableHighlight>
+                </Pressable>
             </View>
             {/* </TouchableHighlight> */}
             </Modal>
