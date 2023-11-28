@@ -11,6 +11,11 @@ const db = mysql.createConnection({
     user: 'root',
     password: '2848',
     database: 'bacode'
+  //  host: '127.0.0.1',
+   // user: 'root',
+   // password: 'qkrtjdgh123!',
+   // database: 'mydatabase'
+
 })
 
 //db 연결 확인

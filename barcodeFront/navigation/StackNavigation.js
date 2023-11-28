@@ -1,7 +1,12 @@
 //stack Navigation
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// 스크린 컴포넌트 임포트
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+
 
 //----------page import----------
 
@@ -10,8 +15,7 @@ import Home from '../screens/Home';
 import HospitalTips from '../screens/HospitalTips'
 import PharmaceuticalTips from '../screens/PharmaceuticalTips'
 import ConvenienceTip from '../screens/ConvenienceTip'
-
-
+import LanguageSelectionScreen from '../screens/LanguageSelectionScreen';
 import Ranking from '../screens/Ranking';
 import Search from '../screens/Search';
 import MyPage from '../screens/MyPage';
