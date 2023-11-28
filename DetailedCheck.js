@@ -16,7 +16,7 @@ const DetailScreen = ({ navigation }) => {
     // 서버로부터 데이터를 받아오는거 구현해야함.
     //  예시
     setInquiryContent('문의한 내용이 여기에 들어갑니다.');
-    setResponseContent('관리자의 답변 내용이 여기에 들어갑니다.');
+    setResponseContent('사용자 누구나 답변이 가능합니다.'); // 관리자 답변이 아닌 커뮤니티 방식으로 사용자, 관리자 답변 가능
     setInquiryTimestamp('2023-10-19T10:00:00Z');
     setResponseTimestamp('2023-10-20T15:30:00Z');
   }, []);
@@ -37,7 +37,7 @@ const DetailScreen = ({ navigation }) => {
       second: '2-digit',
     }).format(date);
   };
-  
+
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontSize: width * 0.07,
+    bottom: -30,
   },
   header: {
     fontSize: width * 0.06,
