@@ -12,10 +12,15 @@ const cheerio = require('cheerio');
 
 //db key config로 관리하기
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: 'localhost',   
     user: 'root',
-    password: '4865',
-    database: 'barcoder'
+    password: '2848',
+    database: 'bacode'
+  //  host: '127.0.0.1',
+   // user: 'root',
+   // password: 'qkrtjdgh123!',
+   // database: 'mydatabase'
+
 })
 
 //db 연결 확인
@@ -30,6 +35,10 @@ db.connect((err) => {
         console.log("connected!!!", result);
     })
 })
+
+// query 메서드를 Promise로 변환 
+const util = require('util');
+const queryAsync = util.promisify(db.query).bind(db);
 
 
 //router로 get 요청받기 test
@@ -90,15 +99,12 @@ router.get('/barcodePage/', async(req,res) => {
                 console.log("데이터를 구하지 못했습니다.")
             }
         }
-
         //barcodeData를 채우는 작업
         barcodeData[0].barcodeNum = barcodeNumData;
+
         res.send(result);
     })
 })
-
-
-
 
 
 //사이트 서버에서 이미지 소스 크롤링
@@ -173,6 +179,18 @@ async function updateBarcodeImageUrl(barcodeNum, imageUrl){
         throw error; //호출하는 곳에서 에러 처리
     } 
 }
+
+router.get('/api/rankings', async (req, res) => {
+    try {
+        const sql = 'SELECT * FROM products ORDER BY scanCnt DESC LIMIT 10';
+        const rankings = await queryAsync(sql);
+        console.log('Rankings:', rankings); // 결과를 콘솔에 출력
+        res.json(rankings);
+    } catch (err) {
+        console.error('Error fetching rankings:', err);
+        res.status(500).send(err);
+    }
+});
 
 module.exports = router;
 
