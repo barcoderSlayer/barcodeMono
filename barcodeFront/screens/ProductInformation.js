@@ -7,6 +7,11 @@ import { useNavigation } from "@react-navigation/native";
 import { useIsFocused } from "@react-navigation/native";
 import axios from 'axios';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+// import {LOCALHOST_IP_NUMBER} from '@env'; // 실행이 안됨...
+// .env에 환경변수로 EXPO_PUBLIC_API_KEY= 123 ... 을입력해서 사용
+import Constants from 'expo-constants';
+
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -61,6 +66,11 @@ export default function ProductInformation({ route }) {
 
     const handlePress = () => {
         console.log("버튼 클릭 했네요 요청하겠습니다.")
+        let apiUrl = process.env.EXPO_PUBLIC_IP_NUMBER;
+        console.log(apiUrl);
+        apiKey = Constants
+
+
         getData();
     }
 
@@ -135,7 +145,13 @@ export default function ProductInformation({ route }) {
                 </View>
             </View>
             {titleName}
-            <Button title="click get object start" onPress={handlePress}/>
+            <Button style={{bottomContainer: {
+                position:'absolute',
+                bottom:0,
+                left:0,
+                right:0,
+            },
+            }} title="click get object start" onPress={handlePress}/>
             </ScrollView>
              {/* 모달창 세팅 */}
             <Modal
