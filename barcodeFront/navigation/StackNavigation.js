@@ -20,7 +20,7 @@ import LanguageSelectionScreen from '../screens/LanguageSelectionScreen';
 import Ranking from '../screens/Ranking';
 import Search from '../screens/Search';
 
-import Home2 from '../screens/Home2';
+
 
 //========== Camera ==========
 import Camera from '../screens/Camera';
@@ -52,21 +52,7 @@ const HomeStackNavigator = () => {
                         fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
                     },
                 }}
-            /> 
-            <Stack.Screen 
-                name="Home2" 
-                component={Home2}
-                options={{
-                    title: '홈2',
-                    headerStyle: {
-                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
-                    },
-                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
-                    headerTitleStyle: {
-                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
-                    },
-                }}
-            />     
+            />  
             <Stack.Screen 
                 name="HospitalTips" 
                 component={HospitalTips}
@@ -157,7 +143,6 @@ const CameraStackNavigator = () => {
                     headerShown: false,
                     headerTintColor:"green",
                 }}/>
-            <Stack.Screen name="CameraScreen" component={Camera} />
             <Stack.Screen name="ProductInformationScreen" component={ProductInformation}
                 options={{
                     headerShown: false,

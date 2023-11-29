@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView,TouchableOpacity } from "react-nativ
 import { SliderBox } from "react-native-image-slider-box";
 
 
-export default class Home2 extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +23,7 @@ export default class Home2 extends Component {
           images={this.state.images}
           sliderBoxHeight={300}
           onCurrentImagePressed={index => {
-            console.warn(`image ${index} pressed`);
+            // console.warn(`image ${index} pressed`);
             const screens = ['HospitalTips', 'PharmaceuticalTips', 'ConvenienceTip']; // 스크린 이름 배열
             const targetScreen = screens[index];
             if (targetScreen) {

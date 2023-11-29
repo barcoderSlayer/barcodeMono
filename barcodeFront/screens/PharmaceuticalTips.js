@@ -15,14 +15,14 @@ export default function PharmaceuticalTips({ navigation }) {
           <Text style={styles.categoryTitle}>의약품을 파는곳 위치보기</Text>
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Home2", { screen: 'Home2' })}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home", { screen: 'Home' })}>
           <View style={styles.tipTextContainer}>
             <Text style={styles.tipText}>
               <Text style={{ marginLeft: 40 }}>           ⦁ 약국 위치 보러가기                                {'>'}</Text>
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Home2", { screen: 'Home2' })}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home", { screen: 'Home' })}>
           <View style={styles.tipTextContainer}>
             <Text style={styles.tipText}>
               <Text style={{ marginLeft: 40 }}>           ⦁ 편의점 위치 보러가기                             {'>'}</Text>

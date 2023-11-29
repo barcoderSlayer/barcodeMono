@@ -12,15 +12,20 @@ const cheerio = require('cheerio');
 
 //db key config로 관리하기
 const db = mysql.createConnection({
-    host: 'localhost',   
-    user: 'root',
-    password: '2848',
-    database: 'bacode'
+    // host: 'localhost',   
+    // user: 'root',
+    // password: '2848',
+    // database: 'bacode'
+
   //  host: '127.0.0.1',
    // user: 'root',
    // password: 'qkrtjdgh123!',
    // database: 'mydatabase'
 
+   host: 'localhost',   
+   user: 'root',
+   password: '4865',
+   database: 'barcoder'
 })
 
 //db 연결 확인
