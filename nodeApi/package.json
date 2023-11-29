@@ -2,8 +2,8 @@
   "name": "barcoder",
   "version": "1.0.0",
   "description": "",
-  "main":"express.js",
-  "scripts":{
+  "main": "express.js",
+  "scripts": {
     "start": "node express.js"
   },
   "dependencies": {

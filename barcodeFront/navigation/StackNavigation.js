@@ -13,6 +13,7 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 //=========== Home ============= 
 import Home from '../screens/Home';
 import HospitalTips from '../screens/HospitalTips'
+import HospitalMap from '../screens/HospitalMap'
 import PharmaceuticalTips from '../screens/PharmaceuticalTips'
 import ConvenienceTip from '../screens/ConvenienceTip'
 import LanguageSelectionScreen from '../screens/LanguageSelectionScreen';
@@ -66,6 +67,20 @@ const HomeStackNavigator = () => {
                 component={HospitalTips}
                 options={{
                     title: '병원팁',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
+                    },
+                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
+                    headerTitleStyle: {
+                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
+                    },
+                }}
+            />
+            <Stack.Screen 
+                name="HospitalMap" 
+                component={HospitalMap}
+                options={{
+                    title: '병원',
                     headerStyle: {
                         backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
                     },
