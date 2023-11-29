@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Component } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';  // 추가
 
-export default function MyPage({route}) {
+export default function MyPage({ route }) {
+  const navigation = useNavigation();  // 추가
 
 
   return (
@@ -25,17 +27,19 @@ export default function MyPage({route}) {
       <Text style={[styles.menuItemText, { top: 200, left: 40 }]}>기록</Text>
       </View>
     </View>
+
+
       <View style={styles.InternalmenuContainer}>
-        <TouchableOpacity style={styles.Language_menuItem}>
+        <TouchableOpacity style={styles.Language_menuItem} onPress={() => navigation.navigate("PharmaceuticalTips",{screen:'PharmaceuticalTips'})}>
           <Text style={[styles.Detail_menuItemText, { top: -55, left: 90 }]}>언어설정</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.Inquiry_menuItem}>
+        <TouchableOpacity style={styles.Inquiry_menuItem} onPress={() => navigation.navigate("Contacting",{screen:'Contacting'})}>
           <Text style={[styles.Detail_menuItemText, { top: 55, left: 90 }]}>문의하기</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.Answer_menuItem}>
+        <TouchableOpacity style={styles.Answer_menuItem} onPress={() => navigation.navigate("AnswerCheck",{screen:'AnswerCheck'})}>
           <Text style={[styles.Detail_menuItemText, { top: 105, left: 90 }]}>답변확인</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.Barcoderecord_menuItem}>
+        <TouchableOpacity style={styles.Barcoderecord_menuItem} onPress={() => navigation.navigate("Search",{screen:'Search'})}>
           <Text style={[styles.Detail_menuItemText, { top: 210, left: 90 }]}>바코드 기록</Text>
         </TouchableOpacity>  
       
@@ -48,13 +52,6 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1,
     backgroundColor: '#fff',
-  },
-  header: { // 상단바
-    backgroundColor: '#ADA4A5',
-    height: 100,        
-    alignItems: 'center',
-    justifyContent: 'flex-end', // 헤더 텍스트를 헤더 하단에 정렬
-    paddingBottom: 25, // 아래쪽 가장자리에서 텍스트 간격을 유지하기 위해 패딩을 추가합니다.
   },
   WhiteContainer: { // 흰 직사각형
     backgroundColor: '#fff', // 직사각형 도형 색깔
@@ -75,7 +72,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   menuContainer: {  
-    marginTop: 50, // 상단바를 제외한 전체 글자를 아래로 이동하려면 이것으로 조정.
+    marginTop: 10, // 상단바를 제외한 전체 글자를 아래로 이동하려면 이것으로 조정.
   },
   menuItem: { 
     paddingVertical: 20,    // 설정, 문의, 기록 세로 위치 조정 

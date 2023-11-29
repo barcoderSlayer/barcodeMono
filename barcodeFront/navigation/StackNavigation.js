@@ -19,13 +19,18 @@ import ConvenienceTip from '../screens/ConvenienceTip'
 import LanguageSelectionScreen from '../screens/LanguageSelectionScreen';
 import Ranking from '../screens/Ranking';
 import Search from '../screens/Search';
-import MyPage from '../screens/MyPage';
+
 import Home2 from '../screens/Home2';
 
 //========== Camera ==========
 import Camera from '../screens/Camera';
 import ProductInformation from '../screens/ProductInformation';
 
+//========== MyPage ==========
+import MyPage from '../screens/MyPage';
+import Contacting from '../screens/Contacting';
+import AnswerCheck from '../screens/AnswerCheck';
+import DetailedCheck from '../screens/DetailedCheck';
 
 
 // 모듈 변수 선언
@@ -169,22 +174,83 @@ const SearchStackNavigator = () => {
             <Stack.Screen name="SearchScreen" component={Search} />
         </Stack.Navigator>
     )
+    
 }
 
 const MyPageStackNavigator = ({ navigation, route }) => {
     // 하단 탭바 제거
-    React.useLayoutEffect(() => {
-        const routeName = getFocusedRouteNameFromRoute(route);
-        if (routeName === 'MyPage') {
-            navigation.setOptions({ tabBarStyle: { display: undefined } });
-        } else {
-            navigation.setOptions({ tabBarStyle: { display: 'none' } }, { screenOptions: { headerShown: false } });
-        }
-    }, [navigation, route]);
+    // React.useLayoutEffect(() => {
+    //     const routeName = getFocusedRouteNameFromRoute(route);
+    //     if (routeName === 'MyPage') {
+    //         navigation.setOptions({ tabBarStyle: { display: undefined } });
+    //     } else {
+    //         navigation.setOptions({ tabBarStyle: { display: 'none' } }, { screenOptions: { headerShown: false } });
+    //     }
+    // }, [navigation, route]);
     return (
         <Stack.Navigator initialRouteName='MyPage'>
-            <Stack.Screen name="MyPageScreen" component={MyPage} />
+            <Stack.Screen
+                name="MyPageScreen"
+                component={MyPage}
+                options={{
+                    title: 'MyPage',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', 
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold', 
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="Contacting"
+                component={Contacting}
+                options={{
+                    title: 'Contacting',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', 
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold', 
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="AnswerCheck"
+                component={AnswerCheck}
+                options={{
+                    title: 'AnswerCheck',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', 
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold', 
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="DetailedCheck"
+                component={DetailedCheck}
+                options={{
+                    title: 'DetailedCheck',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', 
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold', 
+                    },
+                }}
+            />
         </Stack.Navigator>
+        
+        
+        
     );
+    
+    
 };
 export { HomeStackNavigator, RankingStackNavigator, CameraStackNavigator, SearchStackNavigator, MyPageStackNavigator };
