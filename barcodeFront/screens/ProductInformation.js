@@ -27,7 +27,6 @@ export default function ProductInformation({ route }) {
     const [productDivision, setProductDivision]=useState();
     const [modalVisible, setModalVisible] = useState(false); //모달창 보기
 
-
     //이미지 확대해서 보기 모달창
     const toggleModal = () => {
         setModalVisible(!modalVisible);
@@ -69,7 +68,6 @@ export default function ProductInformation({ route }) {
         let apiUrl = process.env.EXPO_PUBLIC_IP_NUMBER;
         console.log(apiUrl);
         apiKey = Constants
-
 
         getData();
     }

@@ -45,6 +45,7 @@ router.get('/', (req,res) => {
 
 //barcodePage
 //http://10.20.16.90:3000/barcodePage/?barcodeNumData=300450444394
+// http://192.168.0.41:3000/barcodePage/?barcodeNumData=300450444394
 // 비동기적으로 가져와야한다. async ...
 // 순서 : 데이터베이스에 바코드 넘버가 있는지, → 데이터베이스에 바코드 이미지가 있는지 → 바코드 이름이 있는지
 router.get('/barcodePage/', async(req,res) => {
