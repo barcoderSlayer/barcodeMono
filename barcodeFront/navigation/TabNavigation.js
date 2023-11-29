@@ -19,7 +19,7 @@ const TabNavigation = () => {
     return (
         <>
             <NavigationContainer >
-                <Tab.Navigator screenOptions={{ headerShown: false }}>
+                <Tab.Navigator backBehavior='history' screenOptions={{ headerShown: false }}>
                     <Tab.Screen name="Home" component={HomeStackNavigator} />
                     <Tab.Screen name="Ranking" component={RankingStackNavigator} />
                     <Tab.Screen name="Camera" component={CameraStackNavigator} />
