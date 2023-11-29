@@ -59,11 +59,11 @@ const App = () => {
             <Text style={styles.interactiveButtonText}>1달</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonQuestion}>
+          <TouchableOpacity style={styles.buttonQuestion} onPress={() => navigation.navigate("DetailedCheck",{screen:'DetailedCheck'})}>
             <Text style={styles.interactiveButtonText}>상세확인</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonDanger}>
+          <TouchableOpacity style={styles.buttonDanger} onPress={() => navigation.navigate("DetailedCheck",{screen:'DetailedCheck'})}>
             <Text style={styles.interactiveButtonText}>상세확인</Text>
           </TouchableOpacity>
         </View>
