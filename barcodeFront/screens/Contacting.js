@@ -1,11 +1,11 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, PanResponder, Animated } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
   const navigation = useNavigation();
-  const [text1Position, setText1Position] = useState({ top: 550, left: 20 });   // 텍스트 문장 첫번째
-  const [text2Position, setText2Position] = useState({ top: 600, left: 20 });   // 텍스트 문장 두번째
+  const [text1Position, setText1Position] = useState({ top: 420, left: 20 });   // 텍스트 문장 첫번째
+  const [text2Position, setText2Position] = useState({ top: 470, left: 20 });   // 텍스트 문장 두번째
 
   const moveText1 = () => {
     setText1Position({ top: text1Position.top + 10, left: text1Position.left + 10 });
@@ -16,6 +16,10 @@ const App = () => {
   };
 
   return ( 
+  <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+  > 
     <View style={styles.container}>
       {/* Header or Navigation Bar */}
       <View style={styles.header}> 
@@ -29,24 +33,28 @@ const App = () => {
       <View style={styles.content}>
         {/* Menu */}
         <View style={styles.menu}>
-          <TouchableOpacity style={styles.menuButton}><Text>문의</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.menuButton}><Text>수정 요청</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.menuButton}><Text>오류/에러</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.menuButton}><Text>기타</Text></TouchableOpacity>
         </View>
 
         {/* Input Area */}
         <View style={styles.inputArea}>
-          <Text style={styles.inputLabel}>사진</Text>
-          <View style={styles.imageUploadBox}></View>
-          <Text style={styles.inputLabel}>내용</Text>
+          <Text style={styles.inputLabel}>제목</Text>
+          {/* <View style={styles.imageUploadBox}></View> */}
+                  {/* 새로운 텍스트 입력 필드 추가 */}
           <TextInput 
-            style={styles.textInput} 
+            style={styles.additionalTextInput} 
             multiline 
-            numberOfLines={4} 
-            placeholder="내용을 입력하세요" 
+            numberOfLines={2} 
+            placeholder="제목을 입력하세요" 
           />
-        </View>
+
+        <Text style={styles.inputLabel}>내용</Text>
+        <TextInput 
+          style={styles.textInput}
+          multiline 
+          numberOfLines={10}  
+          placeholder="내용을 입력하세요" 
+        />
+      </View>
 
         {/* Adjustable Text Components */}
         < Text style={[styles.adjustableText, { top: text1Position.top, left: text1Position.left }]}>
@@ -66,8 +74,9 @@ const App = () => {
           <Text style={styles.cancelButtonText}>취소</Text>
         </TouchableOpacity>
         </View>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -81,7 +90,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#7B6F72',
   },
- 
   backButton: { // 뒤로 가기 버튼 
     marginRight: 16,
     justifyContent: 'center',
@@ -108,38 +116,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: 24,
   },
-  menuButton: {   // 문의, 수정 요청, 오류/에러, 기타 버튼
-    padding: 8,
-    backgroundColor: '#ddd',
-    borderRadius: 4,
-    // 크기 조절이 가능하도록 너비와 높이를 추가하세요.
-    width: 80, // 넓이 조절 가능
-    height: 60, // 높이 조절 가능
-    // 유용성 보장
-    minWidth: 30,
-    minHeight: 20,
-    justifyContent: 'center', // 텍스트 세로 가운데 배치
-    alignItems: 'center', // 텍스트 가로 가운데 배치
-  },
-  inputArea: {
+  inputArea: {  // 제목, 제목입력, 내용, 내용입력 위치 조정
     flex: 1,
+    bottom: 80,
   },
-  imageUploadBox: { // 사진 업로드
-    width: '30%',
-    height: 100,
-    borderWidth: 1,
-    borderColor: '#000',
-    borderStyle: 'dashed',
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
+  additionalTextInput: {  // 제목 텍스트 박스
+    borderWidth: 2,
+    borderColor: '#ddd',
+    padding: 8,
+    textAlignVertical: 'top',
+    marginBottom: 30,   // 내용 텍스트와의 거리
   },
   inputLabel: { 
-    marginBottom: 8,
+    marginBottom: 20,
+    fontSize: 20,
     fontWeight: 'bold',
   },
-  textInput: {   // 텍스트 박스
+  textInput: {   // 내용 텍스트 박스
     borderWidth: 2,
     borderColor: '#ddd',
     padding: 16,
@@ -149,7 +142,7 @@ const styles = StyleSheet.create({
     top: 180, 
     left: 0, 
     right: 0, 
-    bottom: 100, 
+    bottom: 50, 
   },
   footer: {
     padding: 16,
@@ -189,7 +182,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     bottom: -20,
   },
-  footer: {
+  footer: {   // 취소 버튼 위치 조종
     // ... other footer styles ...
     position: 'relative', // 절대 위치 지정 필요
     height: 45, // 절대 위치에 있는 버튼을 위한 공간이 확보되도록 고정 높이를 설정하세요.
