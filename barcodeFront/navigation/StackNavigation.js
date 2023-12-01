@@ -130,7 +130,14 @@ const RankingStackNavigator = () => {
                     },
                 }}
             />
+            <Stack.Screen name="ProductInformationScreen" component={ProductInformation}
+                options={{
+                    headerShown: false,
+                    headerTintColor:"green",
+                }}
+            />
         </Stack.Navigator>
+        
     );
 };
 
