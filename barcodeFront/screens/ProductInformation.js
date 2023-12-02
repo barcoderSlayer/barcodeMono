@@ -274,6 +274,8 @@ import { Button, StyleSheet, Text, View, Image, Dimensions, ScrollView, Modal, P
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableHighlight } from 'react-native';
+
 
 const { width, height } = Dimensions.get('window');
 
