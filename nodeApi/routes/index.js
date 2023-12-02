@@ -201,25 +201,27 @@ router.get('/api/rankings', async (req, res) => {
 module.exports = router;
 
 
-//박성호
+//박성호   
 const helmet = require('helmet');
 require('dotenv').config(); // 환경 변수 라이브러리
 
-const app = express();
-const port = process.env.PORT || 5000;
+const appHospitals = express();
+const appPharmacies = express();
 
-app.use(express.json());
-app.use(helmet()); // 보안 헤더 설정
+const portHospitals = 4000;
+const portPharmacies = 4001;
 
-app.get('/api/hospitals', (req, res) => {
-  // 입력 유효성 검사
+appHospitals.use(express.json());
+appHospitals.use(helmet()); // 보안 헤더 설정
+
+appHospitals.get('/api/hospitals', (req, res) => {
   const userLat = parseFloat(req.query.lat);
   const userLng = parseFloat(req.query.lng);
   if (isNaN(userLat) || isNaN(userLng)) {
     return res.status(400).send('Invalid latitude or longitude');
   }
 
-  // 파라미터화된 쿼리 사용
+
   const query = `
     SELECT *, 
       (6371 * acos(
@@ -233,25 +235,21 @@ app.get('/api/hospitals', (req, res) => {
 
   db.query(query, [userLat, userLng, userLat], (err, results) => {
     if (err) {
-      console.error(err); // 서버 로그
-      return res.status(500).send('An error occurred'); // 일반화된 에러 메시지
+      console.error(err);
+      return res.status(500).send('An error occurred');
     }
     res.json(results);
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+appHospitals.listen(portHospitals, () => {
+  console.log(`병원 서버가 포트 ${portHospitals}에서 실행 중입니다`);
 });
 
+appPharmacies.use(express.json());
+appPharmacies.use(helmet());
 
-//약국
-require('dotenv').config(); // 환경 변수 라이브러리
-
-app.use(express.json());
-app.use(helmet());
-
-app.get('/api/pharmacies', (req, res) => {
+appPharmacies.get('/api/pharmacies', (req, res) => {
   const userLat = parseFloat(req.query.lat);
   const userLng = parseFloat(req.query.lng);
   if (isNaN(userLat) || isNaN(userLng)) {
@@ -278,6 +276,6 @@ app.get('/api/pharmacies', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+appPharmacies.listen(portPharmacies, () => {
+  console.log(`약국 서버가 포트 ${portPharmacies}에서 실행 중입니다`);
 });
