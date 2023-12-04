@@ -190,3 +190,44 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
+// 서버 사이드 (Node.js)의 기본 서버 설정:
+const express = require('express');
+const bodyParser = require('body-parser');
+const indexRouter = require('./routes/index');
+
+const app = express();
+
+app.use(bodyParser.json());
+app.use('/', indexRouter);
+
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+
+// 클라이언트 사이드 (Expo 앱)의 함수:
+const submitQuestion = async (title, content, answerPassword) => {
+  try {
+    const response = await fetch('http://192.168.1.102:139/submit-question', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: title,
+        content: content,
+        answer_password: answerPassword,
+      }),
+    });
+    const data = await response.json();
+    if (response.status === 201) {
+      console.log('문의글이 성공적으로 저장되었습니다.', data);
+    } else {
+      console.log('문의글 저장에 실패했습니다.', data);
+    }
+  } catch (error) {
+    console.error('문의글 저장 중 오류가 발생했습니다.', error);
+  }
+};
