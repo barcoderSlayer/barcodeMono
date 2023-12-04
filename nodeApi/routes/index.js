@@ -200,36 +200,33 @@ router.get('/api/rankings', async (req, res) => {
 module.exports = router;
 
 const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
+const mysql = require('mysql');
 
 const app = express();
+app.use(express.json());
 
-// MongoDB 데이터베이스 연결
-mongoose.connect('mongodb://localhost:27017/yourDatabaseName', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB에 연결되었습니다.'))
-  .catch(err => console.error('MongoDB 연결에 실패했습니다:', err));
+// MariaDB 연결 설정
+const pool = mysql.createPool({
+  connectionLimit : 10,
+  host     : 'localhost',
+  user     : 'yourUsername',
+  password : 'yourPassword',
+  database : 'yourDatabaseName'
+});
 
-// 데이터 모델 정의
-const Question = mongoose.model('Question', new mongoose.Schema({
-  title: String,
-  content: String,
-  answerPassword: String
-}));
-
-// 미들웨어 설정
-app.use(bodyParser.json());
-
-// 라우트 설정
-app.post('/submit-question', async (req, res) => {
-  try {
-    const { title, content, answerPassword } = req.body;
-    const newQuestion = new Question({ title, content, answerPassword });
-    await newQuestion.save();
-    res.status(201).send({ message: '문의가 성공적으로 제출되었습니다.' });
-  } catch (error) {
-    res.status(500).send({ message: '문의 제출 중 오류가 발생했습니다.', error: error.message });
-  }
+// 문의 사항 제출 API
+app.post('/submit-question', (req, res) => {
+  const { title, content, answerPassword } = req.body;
+  
+  // SQL 쿼리를 사용하여 데이터베이스에 데이터 삽입
+  pool.query('INSERT INTO contact_answer (title, content, answer_password) VALUES (?, ?, ?)', 
+             [title, content, answerPassword], (error, results, fields) => {
+    if (error) {
+      return res.status(500).send({ message: '문의 제출 중 오류가 발생했습니다.', error: error });
+    }
+    
+    res.status(201).send({ message: '문의가 성공적으로 제출되었습니다.', id: results.insertId });
+  });
 });
 
 // 서버 시작
@@ -237,3 +234,4 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`서버가 ${port}번 포트에서 실행중입니다.`);
 });
+
