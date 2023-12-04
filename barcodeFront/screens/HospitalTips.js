@@ -15,7 +15,7 @@ export default function HospitalTips({ navigation }) {
           <Text style={styles.categoryTitle}>병원 위치보기</Text>
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Home", { screen: 'Home' })}>
+        <TouchableOpacity onPress={() => navigation.navigate("HospitalMap", { screen: 'HospitalMap' })}>
           <View style={styles.tipTextContainer}>
             <Text style={styles.tipText}>
               <Text style={{ marginLeft: 40 }}>           ⦁ 병원 위치 보러가기                                {'>'}</Text>

@@ -15,6 +15,7 @@ import Home from '../screens/Home';
 import HospitalTips from '../screens/HospitalTips'
 import HospitalMap from '../screens/HospitalMap'
 import PharmaceuticalTips from '../screens/PharmaceuticalTips'
+import PharmarcyMap from '../screens/PharmarcyMap'
 import ConvenienceTip from '../screens/ConvenienceTip'
 import LanguageSelectionScreen from '../screens/LanguageSelectionScreen';
 import Ranking from '../screens/Ranking';
@@ -86,6 +87,20 @@ const HomeStackNavigator = () => {
                 component={PharmaceuticalTips}
                 options={{
                     title: '의약품팁',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
+                    },
+                    headerTintColor: '#fff', // 헤더의 타이틀 색상을 흰색으로 설정
+                    headerTitleStyle: {
+                        fontWeight: 'bold', // 필요한 경우 타이틀의 글꼴 스타일 조정
+                    },
+                }}
+            />
+            <Stack.Screen 
+                name="PharmarcyMap" 
+                component={PharmarcyMap}
+                options={{
+                    title: '약국',
                     headerStyle: {
                         backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
                     },

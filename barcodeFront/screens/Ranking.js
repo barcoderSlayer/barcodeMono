@@ -9,7 +9,7 @@ export default function Ranking({ barcodeData, navigation }) {
   useEffect(() => {
     const fetchRankings = async () => {
       try {
-        const response = await axios.get('http://192.168.0.41:3000/api/rankings');
+        const response = await axios.get('http://172.30.1.13:3000/api/rankings');
         console.log('Server Response:', response.data);
         setRankings(response.data);
       } catch (error) {
