@@ -1,7 +1,9 @@
+
 // Routes/index.js
 //Controller
 
 //http://192.168.0.41:3000/
+
 
 const express = require('express');
 const router = express.Router();
@@ -17,15 +19,15 @@ const db = mysql.createConnection({
     // password: '2848',
     // database: 'bacode'
 
-  //  host: '127.0.0.1',
-   // user: 'root',
-   // password: 'qkrtjdgh123!',
-   // database: 'mydatabase'
-
-   host: 'localhost',   
+   host: '127.0.0.1',
    user: 'root',
-   password: '4865',
+   password: 'qkrtjdgh123!',
    database: 'barcoder'
+
+//    host: 'localhost',   
+//    user: 'root',
+//    password: '4865',
+//    database: 'barcoder'
 })
 
 //db 연결 확인
@@ -199,3 +201,82 @@ router.get('/api/rankings', async (req, res) => {
 
 module.exports = router;
 
+
+//박성호   
+const helmet = require('helmet');
+require('dotenv').config(); // 환경 변수 라이브러리
+
+const appHospitals = express();
+const appPharmacies = express();
+
+const portHospitals = 4000;
+const portPharmacies = 4001;
+
+appHospitals.use(express.json());
+appHospitals.use(helmet()); // 보안 헤더 설정
+
+appHospitals.get('/api/hospitals', (req, res) => {
+  const userLat = parseFloat(req.query.lat);
+  const userLng = parseFloat(req.query.lng);
+  if (isNaN(userLat) || isNaN(userLng)) {
+    return res.status(400).send('Invalid latitude or longitude');
+  }
+
+
+  const query = `
+    SELECT *, 
+      (6371 * acos(
+        cos(radians(?)) * cos(radians(latitude)) *
+        cos(radians(longitude) - radians(?)) +
+        sin(radians(?)) * sin(radians(latitude))
+      )) AS distance 
+    FROM hospitals
+    HAVING distance < 1
+    ORDER BY distance`;
+
+  db.query(query, [userLat, userLng, userLat], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('An error occurred');
+    }
+    res.json(results);
+  });
+});
+
+appHospitals.listen(portHospitals, () => {
+  console.log(`병원 서버가 포트 ${portHospitals}에서 실행 중입니다`);
+});
+
+appPharmacies.use(express.json());
+appPharmacies.use(helmet());
+
+appPharmacies.get('/api/pharmacies', (req, res) => {
+  const userLat = parseFloat(req.query.lat);
+  const userLng = parseFloat(req.query.lng);
+  if (isNaN(userLat) || isNaN(userLng)) {
+    return res.status(400).send('Invalid latitude or longitude');
+  }
+
+  const query = `
+    SELECT *,
+      (6371 * acos(
+        cos(radians(?)) * cos(radians(latitude)) *
+        cos(radians(longitude) - radians(?)) +
+        sin(radians(?)) * sin(radians(latitude))
+      )) AS distance
+    FROM pharmacies
+    HAVING distance < 1
+    ORDER BY distance`;
+
+  db.query(query, [userLat, userLng, userLat], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('An error occurred');
+    }
+    res.json(results);
+  });
+});
+
+appPharmacies.listen(portPharmacies, () => {
+  console.log(`약국 서버가 포트 ${portPharmacies}에서 실행 중입니다`);
+});
