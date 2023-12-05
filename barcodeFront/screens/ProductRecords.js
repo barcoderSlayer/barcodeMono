@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductRecords = () => {
     const [records, setRecords] = useState([]);
+    const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
 
     useEffect(() => {
         const fetchRecords = async () => {
@@ -18,11 +19,22 @@ const ProductRecords = () => {
         fetchRecords();
     }, []);
 
+    // 검색 기능 구현
+    const filteredRecords = records.filter(record => {
+        return record.productName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+               record.barcode.includes(searchTerm);
+    });
+
     return (
         <View style={styles.container}>
-            <TextInput style={styles.searchBar} placeholder="바코드 기록검색" />
+            {/* 검색바에 텍스트 입력 처리 */}
+            <TextInput 
+                style={styles.searchBar} 
+                placeholder="바코드 기록검색"
+                onChangeText={text => setSearchTerm(text)}
+            />
             <FlatList
-                data={records}
+                data={filteredRecords} // 필터링된 데이터 사용
                 renderItem={({ item }) => (
                     <View style={styles.item}>
                         <Text style={styles.barcode}>{item.barcode}</Text>
