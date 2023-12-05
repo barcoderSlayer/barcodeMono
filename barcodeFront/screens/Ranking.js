@@ -48,8 +48,6 @@ export default function Ranking({ barcodeData, navigation }) {
 }
 
 // styles 생략
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

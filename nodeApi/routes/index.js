@@ -1,33 +1,21 @@
-
 // Routes/index.js
 //Controller
 
 //http://192.168.0.41:3000/
-
-
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
 //cheerio API 자바스크립트 크롤링 api↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 const axios = require('axios');
 const cheerio = require('cheerio');
+const config= require('../config');
 
-//db key config로 관리하기
+//DataBaseKey
 const db = mysql.createConnection({
-    host: 'localhost',   
-    user: 'root',
-    password: '2848',
-    database: 'bacode'
-
-//    host: '127.0.0.1',
-//    user: 'root',
-//    password: 'qkrtjdgh123!',
-//    database: 'barcoder'
-
-//    host: 'localhost',   
-//    user: 'root',
-//    password: '4865',
-//    database: 'barcoder'
+   host: config.DB_HOST,   
+   user: config.DB_USER,
+   password: config.DB_PASSWORD,
+   database: config.DB_DATABASE
 })
 
 //db 연결 확인
