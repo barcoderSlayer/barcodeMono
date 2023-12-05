@@ -9,7 +9,7 @@ const mysql = require('mysql');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const config= require('../config');
-const OpenAI   = require('openai-api');
+const OpenAI   = require('openai');
 
 
 //DataBaseKey
@@ -138,27 +138,42 @@ const callGpt35 = async(prompt) =>{
     const myApiKey=config.GPT_APIKEY;
 
     try{
-        const openai = new OpenAI(myApiKey);
+        const openai = new OpenAI({apiKey:myApiKey});
 
+        const chatCompletion = await openai.chat.completions.create({
+            messages: [{ role: "user", content: "Say this is a test" }],
+            model: "gpt-3.5-turbo",
+        })
+
+        console.log(chatCompletion.choices[0].message);
+
+        // 실패코드
         // const response = await openai.createChatCompletion({
         //     model: "gpt-3.5-turbo",
         //     messages:[{role:"user", content:prompt}],
         // });
-        const gptResponse = await openai.complete({
-            engine: 'davinci',
-            prompt: 'this is a test',
-            maxTokens: 5,
-            temperature: 0.9,
-            topP: 1,
-            presencePenalty: 0,
-            frequencyPenalty: 0,
-            bestOf: 1,
-            n: 1,
-            stream: false,
-            stop: ['\n', "testing"]
-        });
-        console.log(gptResponse.data);
         // return response.data.choices[0].message;
+
+
+        //성공 코드
+        // const gptResponse = await openai.complete({
+        //     engine: 'text-davinci-003',
+        //     prompt: 'say hello word',
+        //     maxTokens: 5,
+        //     temperature: 1.2,
+        //     topP: 1,
+        //     presencePenalty: 0,
+        //     frequencyPenalty: 0,
+        //     bestOf: 1,
+        //     n: 1,
+        //     stream: false,
+        //     stop: ['\n', "testing"]
+        // });
+        // console.log(gptResponse.data);
+
+
+
+        
 
     }catch(error){
         console.error('callGpr35() error >>>', error);
