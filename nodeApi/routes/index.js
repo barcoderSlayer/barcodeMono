@@ -9,13 +9,15 @@ const mysql = require('mysql');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const config= require('../config');
+const OpenAI   = require('openai-api');
+
 
 //DataBaseKey
 const db = mysql.createConnection({
-   host: config.DB_HOST,   
-   user: config.DB_USER,
-   password: config.DB_PASSWORD,
-   database: config.DB_DATABASE
+    host: config.DB_HOST,   
+    user: config.DB_USER,
+    password: config.DB_PASSWORD,
+    database: config.DB_DATABASE
 })
 
 //db 연결 확인
@@ -129,6 +131,56 @@ router.get('/barcodePage/', async(req,res) => {
 })
 //↑↑↑↑문제점이 크롤링한 데이터를 바로 프론트에 전달해주지 못하고 db에 등록한것을 다시 불러와야하는 단점의 알고림즈
 //↑↑ 문제는 아마 비동기 처리를 하지않았기때문이다.
+
+
+//gpt에게 요청하는 함수
+const callGpt35 = async(prompt) =>{
+    const myApiKey=config.GPT_APIKEY;
+
+    try{
+        const openai = new OpenAI(myApiKey);
+
+        // const response = await openai.createChatCompletion({
+        //     model: "gpt-3.5-turbo",
+        //     messages:[{role:"user", content:prompt}],
+        // });
+        const gptResponse = await openai.complete({
+            engine: 'davinci',
+            prompt: 'this is a test',
+            maxTokens: 5,
+            temperature: 0.9,
+            topP: 1,
+            presencePenalty: 0,
+            frequencyPenalty: 0,
+            bestOf: 1,
+            n: 1,
+            stream: false,
+            stop: ['\n', "testing"]
+        });
+        console.log(gptResponse.data);
+        // return response.data.choices[0].message;
+
+    }catch(error){
+        console.error('callGpr35() error >>>', error);
+        return null;
+    }
+
+}
+
+//gpt에게 데이터 요청리스너 조건 : gpt요청은 텍스트 값이 있을때만 시도해볼 수 있다.
+router.post('/chat', async(req, res)=> {
+    const prompt = 'say hello word';
+    const response = await callGpt35(prompt);
+
+    if(response){
+        res.json({'response' : response});
+        console.log(response);
+    }else{
+        res.status(500).json({'error' :'Fail'})
+    }
+});
+
+
 
 
 //사이트 서버에서 이미지 소스 크롤링
@@ -250,6 +302,9 @@ async function updateBarcodeImageUrl(barcodeNum, imageUrl){
     } 
 }
 
+
+
+
 router.get('/api/rankings', async (req, res) => {
     try {
         const sql = 'SELECT * FROM products ORDER BY scanCnt DESC LIMIT 10';
@@ -265,7 +320,6 @@ router.get('/api/rankings', async (req, res) => {
 module.exports = router;
 
 
-//박성호   
 const helmet = require('helmet');
 require('dotenv').config(); // 환경 변수 라이브러리
 
