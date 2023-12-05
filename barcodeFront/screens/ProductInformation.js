@@ -20,13 +20,13 @@ const { width, height } = Dimensions.get('window');
 
 export default function ProductInformation({ route }) {
 
-
     const [imgUrl,setImgUrl]= useState(""); //상품 이미지 url
     const [productData, setProductData]= useState({}); //상품 정보
     const [loading, setLoading]=useState(); //로딩 => 데이터 불러올때 사용
     const [productName,setProductName] = useState(); //상품 이름
     const [productDivision, setProductDivision]=useState();
     const [modalVisible, setModalVisible] = useState(false); //모달창 보기
+    const [barcodeNumData, setBarcodeNumdata] = useState("");
 
     //이미지 확대해서 보기 모달창
     const toggleModal = () => {
@@ -40,17 +40,17 @@ export default function ProductInformation({ route }) {
 
 
     const navigation = useNavigation();
-    const {barcodeData} = route.params;
 
     useEffect(()=>{
         setImgUrl({url:"https://reactnative.dev/img/tiny_logo.png"}); //이미지 url 세팅
-        console.log("barcodeData = ", barcodeData);
+        console.log("barcodeData = ", barcodeNumData);
+        setBarcodeNumdata(route.params);
         getData();
     },[]);
 
     // data get요청
     const getData = async() =>{
-        const response = await axios.get(`${config.LOCALHOST_IP}/barcodePage/?barcodeNumData=${barcodeData}`)
+        const response = await axios.get(`${config.LOCALHOST_IP}/barcodePage/?barcodeNumData=${barcodeNumData}`)
         .then(function (response) {
             console.log("요청 후 받아온 데이터",response.data);
             setProductData(response.data)
@@ -100,7 +100,7 @@ export default function ProductInformation({ route }) {
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
-                <Text style={{fontWeight:'bold', fontSize:width/18}}>{barcodeData}</Text>
+                <Text style={{fontWeight:'bold', fontSize:width/18}}>{barcodeNumData}</Text>
             </View>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <TouchableHighlight onPress={toggleModal}>

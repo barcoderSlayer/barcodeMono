@@ -26,6 +26,7 @@ import Search from '../screens/Search';
 //========== Camera ==========
 import Camera from '../screens/Camera';
 import ProductInformation from '../screens/ProductInformation';
+import ProductScan from '../screens/ProductScan';
 
 //========== MyPage ==========
 import MyPage from '../screens/MyPage';
@@ -159,7 +160,7 @@ const RankingStackNavigator = () => {
 
 const CameraStackNavigator = () => { 
     return (
-        <Stack.Navigator initialRouteName='Camera'>
+        <Stack.Navigator initialRouteName='ProductScanScreen'>
             <Stack.Screen name="CameraScreen" component={Camera} 
             options={{
                     headerShown: false,
@@ -171,6 +172,11 @@ const CameraStackNavigator = () => {
                     headerTintColor:"green",
                 }}
             />
+            <Stack.Screen name="ProductScanScreen" component={ProductScan} 
+            options={{
+                    headerShown: false,
+                    headerTintColor:"green",
+                }}/>
         </Stack.Navigator>
     )
 }

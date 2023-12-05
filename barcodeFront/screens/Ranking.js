@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, TouchableOpacity, Image, Text, StyleSheet, View } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
+import config from '../config';
 
 export default function Ranking({ barcodeData, navigation }) {
   const [rankings, setRankings] = useState([]);
@@ -9,7 +10,7 @@ export default function Ranking({ barcodeData, navigation }) {
   useEffect(() => {
     const fetchRankings = async () => {
       try {
-        const response = await axios.get('http://172.30.1.13:3000/api/rankings');
+        const response = await axios.get(`${config.LOCALHOST_IP}/api/rankings`);
         console.log('Server Response:', response.data);
         setRankings(response.data);
       } catch (error) {
