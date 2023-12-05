@@ -50,12 +50,13 @@ router.get('/', (req,res) => {
 //barcodePage
 //http://10.20.16.90:3000/barcodePage/?barcodeNumData=300450444394
 // http://192.168.0.41:3000/barcodePage/?barcodeNumData=300450444394
+// https://www.beepscan.com/barcode/88002798
 // 비동기적으로 가져와야한다. async ...
 // 순서 : 데이터베이스에 바코드 넘버가 있는지, → 데이터베이스에 바코드 이미지가 있는지 → 바코드 이름이 있는지
 router.get('/barcodePage/', async(req,res) => {
 
     // result 객체 초기화 = 데이터 자동으러 얻와 점점 채우는 작업 그리고 return
-    let barcodeData = [{
+    var barcodeData = [{
         barcodeNum: null,
         productNameKr: null,
         productNameEn: null,
@@ -75,15 +76,40 @@ router.get('/barcodePage/', async(req,res) => {
         }
         
         // 데이터베이스에서 레코드를 가져왔는데 결과가 없으면 새로운 데이터 추가
-        if (result.length === 0) {
+        if (result.length == 0) {
             console.log("데이터를 찾을 수 없습니다. 새로운 데이터를 추가합니다.");
             const addedBarcodeResult =  addBarcodeNumData(barcodeNumData, res); //error를 띄우기위해 rout핸들러인 res를 전달해줘서 사용한다.
             // 다시 요청하기를 유도해서 데이터 추가를 노리자
+        } else{ 
+               // DB에서 가져온 데이터를 barcodeData에 채워넣기
+        let dbData = result[0]; // 예제로 간단하게 첫 번째 레코드만 가져오도록 했습니다.
+        barcodeData[0].barcodeNum = dbData.barcodeNum;
+        barcodeData[0].productNameKr = dbData.productNameKr;
+        barcodeData[0].productNameEn = dbData.productNameEn;
+        barcodeData[0].scanCnt = dbData.scanCnt;
+        barcodeData[0].imageUrl = dbData.imageUrl;
+        barcodeData[0].division = dbData.division;
         }
-        
+
+        //만약 productNameKr 이 null 이라면
+        if(barcodeData[0].productNameKr == null){
+            console.log("한글 상품 이름이 없습니다.");
+            const crowlName = await getProductNameKr(barcodeNumData);
+            console.log("한글 상품 크롤링해서 받은 이름",crowlName)
+
+            if(crowlName != null){
+                // 상품이름을 얻었다면 데이터 베이스에 넣기
+                console.log('데이터 베이스에 채워두겠습니다.',`${crowlName}`);
+                updateBarcodeProductName(barcodeNumData,crowlName);
+                barcodeData[0].productNameKr = crowlName;
+            }else{
+                console.log("데이터의 이름을 구하지 못하였습니다.")
+            }
+        }
+
         //만약 imageUrl이 없다면 크롤링해서 구해오기 --→ 구해와서 db에 넣기 함수
         if(barcodeData[0].imageUrl == null){
-            console.log("이미지 데이터가 없습니다.")
+            console.log("이미지 데이터가 없습니다. 크롤링 해오겠습니다.")
             const crowlImgUrl =  await getImgUrl(barcodeNumData); //beepscan 서버에 이미지 값 가져오기 (크롤링)
             console.log("이미지url 크롤링함수에서 받은 데이터",crowlImgUrl);
     
@@ -91,15 +117,18 @@ router.get('/barcodePage/', async(req,res) => {
                 updateBarcodeImageUrl(barcodeNumData,crowlImgUrl);
                 barcodeData[0].imageUrl= crowlImgUrl;
             }else{
-                console.log("데이터를 구하지 못했습니다.")
+                console.log("이미지 데이터를 구하지 못했습니다.");
             }
         }
         //barcodeData를 채우는 작업
         barcodeData[0].barcodeNum = barcodeNumData;
 
+        console.log("데이터를 보내겠습니다.", result)
         res.send(result);
     })
 })
+//↑↑↑↑문제점이 크롤링한 데이터를 바로 프론트에 전달해주지 못하고 db에 등록한것을 다시 불러와야하는 단점의 알고림즈
+//↑↑ 문제는 아마 비동기 처리를 하지않았기때문이다.
 
 
 //사이트 서버에서 이미지 소스 크롤링
@@ -124,6 +153,30 @@ async function getImgUrl(barcodeNumData){
         throw error;
     }
     return imageUrl;
+}
+
+// 사이트에서 글자 크롤링 해오기
+async function getProductNameKr(barcodeNumData){
+    let productName = null;
+    try{
+        console.log(barcodeNumData, '의 상품명 한글 데이터 = 크롤링하기');
+        const productNameArr = [];
+        // axios후 크롤링
+        const response = await axios.get(`https://www.beepscan.com/barcode/${barcodeNumData}`);
+                const $ = cheerio.load(response.data); //html 받아오기
+                
+                $('div.container>p>b').each((index, item) =>{
+                    console.log("크롤링 해온 상품명 = ",$(item).text().trim()); //item에서 attribs class 안에 src만 받아오기
+                    productNameArr.push($(item).text());
+                    //얻어온url을 db 이미지에 넣기
+                }); //이미지 가지고오기
+                productName = productNameArr.length > 0 ? productNameArr[0] : null;
+
+    }catch(error){
+        console.log("getProductNameKr에서 에러 발생", error)
+        throw error;
+    }
+    return productName;
 }
 
 
@@ -151,6 +204,28 @@ async function addBarcodeNumData(barcodeNum){
     } 
 }
 
+//데이터 베이스에 상품 이름이 없다면 추가 함수
+async function updateBarcodeProductName(barcodeNum, productName){
+    console.log("데이터 베이스에... ",barcodeNum," 에","productName을 추가합니다 : ",productName);
+    const updateProductNameSql = `UPDATE products set productNameKr = '${productName}' where barcodeNum = '${barcodeNum}'`
+
+    try{
+        const result =await new Promise((resolve, reject) =>{
+            db.query(updateProductNameSql, (err, result) =>{
+                if(err){
+                    console.error(err);
+                    reject('바코드 데이터 추가중 에러 => addBarcodeNumData ERR')
+                }else {
+                    console.log("바코드 데이터를 추가했습니다.",result);
+                    resolve(result);
+                }
+            });
+        });
+        return result;
+    }  catch(error){
+        throw error; //호출하는 곳에서 에러 처리
+    } 
+}
 
 //데이터에 바코드 이미지가 없다면 추가 함수
 async function updateBarcodeImageUrl(barcodeNum, imageUrl){
