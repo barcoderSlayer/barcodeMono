@@ -42,26 +42,34 @@ export default function ProductInformation({ route }) {
     const navigation = useNavigation();
 
     useEffect(()=>{
-        setImgUrl({url:"https://reactnative.dev/img/tiny_logo.png"}); //이미지 url 세팅
-        console.log("barcodeData = ", barcodeNumData);
-        setBarcodeNumdata(route.params);
-        getData();
-    },[]);
+        console.log("barcodeData = ", route.params.barcodeData);
+        setBarcodeNumdata(route.params.barcodeData);
+        
+    },[route.params]);
+
+    useEffect(() =>{
+        if(barcodeNumData){
+            getData();
+        }
+    },[barcodeNumData]);
 
     // data get요청
     const getData = async() =>{
-        const response = await axios.get(`${config.LOCALHOST_IP}/barcodePage/?barcodeNumData=${barcodeNumData}`)
-        .then(function (response) {
-            console.log("요청 후 받아온 데이터",response.data);
-            setProductData(response.data)
-            setProductName(response.data[0].productNameKr);
-            setProductDivision(response.data[0].division);
-            setImgUrl(response.data[0].imageUrl);
-            console.log(response.data[0].imageUrl);
-        })
-        .catch(function (error){
-            console.log(error);
-        });
+        try {
+            const response = await axios.get(`${config.LOCALHOST_IP}/barcodePage/?barcodeNumData=${barcodeNumData}`);
+            console.log("요청 후 받아온 데이터", response.data);
+            if (response.data && response.data.length > 0) {
+                const data = response.data[0];
+                setProductData(data);
+                setProductName(data.productNameKr);
+                setProductDivision(data.division);
+                setImgUrl(data.imageUrl);
+            } else {
+                console.log("데이터가 없습니다.");
+            }
+        } catch (error) {
+            console.error("데이터 요청 중 에러 발생:", error);
+        }
     }
 
     const handlePress = () => {
@@ -81,7 +89,7 @@ export default function ProductInformation({ route }) {
                 {
                     productNameData:productName
                 })
-                console.log(response);
+                console.log('gptRequest()  => ', response);
         } catch(error){
             console.error('gptRequest 요청 중 error발생 : ',error)
         }
@@ -164,7 +172,7 @@ export default function ProductInformation({ route }) {
                 left:0,
                 right:0,
             },
-            }} title="click get object start" onPress={handlePress}/>
+            }} title="Reload" onPress={handlePress}/>
             </ScrollView>
              {/* 모달창 세팅 */}
             <Modal

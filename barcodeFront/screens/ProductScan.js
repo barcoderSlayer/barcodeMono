@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, FlatList, TouchableOpacity, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width } = Dimensions.get('window');
 
 export default function ProductScan() {
+
+  const navigation = useNavigation();
+
   // 상품 스캔 데이터 상태
   const [scannedProducts, setScannedProducts] = useState([]);
 
@@ -25,8 +29,11 @@ export default function ProductScan() {
 
    // 카메라 모드로 이동하는 함수 (현재는 예시로 로그만 출력)
    const handleCameraMode = () => {
-    console.log('카메라 모드로 이동');
-    // 여기에 실제 카메라 스크린으로의 네비게이션 로직을 추가할 수 있습니다.
+    console.log('카메라 페이지로 이동');
+    // 카메라 페이지 이동
+    navigation.navigate("CameraScreen");
+    
+
   };
 
   return (
