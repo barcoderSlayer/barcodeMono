@@ -73,6 +73,20 @@ export default function ProductInformation({ route }) {
         getData();
     }
 
+    //productName이 존재할 시 뜨는 gpt요청 버튼 클릭시 데이터 받아오기 => state에 데이터 넣고 클라이언트에게 보여주기
+    const gptRequest = async() => {
+        try{
+            const response = await axios.post(
+                `http://${config.LOCALHOST_IP}/chat`,
+                {
+                    productNameData:productName
+                })
+                console.log(response);
+        } catch(error){
+            console.error('gptRequest 요청 중 error발생 : ',error)
+        }
+    }
+
 
     //tite Name 
     const titleName = productData === null
