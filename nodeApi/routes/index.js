@@ -469,3 +469,80 @@ appPharmacies.get('/api/pharmacies', (req, res) => {
 appPharmacies.listen(portPharmacies, () => {
   console.log(`약국 서버가 포트 ${portPharmacies}에서 실행 중입니다`);
 });
+
+
+
+
+
+
+//문의글 생성 api
+app.post('/api/inquiries', async (req, res) => {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const { title, content } = req.body;
+      const result = await conn.query("INSERT INTO inquiries (title, content) VALUES (?, ?)", [title, content]);
+      res.json({ success: true, message: 'Inquiry submitted successfully', inquiryId: result.insertId });
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error submitting inquiry' });
+    } finally {
+      if (conn) conn.release();
+    }
+  });
+
+
+
+//문의글 목록 조회 api
+app.get('/api/inquiries', async (req, res) => {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const results = await conn.query("SELECT * FROM inquiries");
+      res.json(results);
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error fetching inquiries' });
+    } finally {
+      if (conn) conn.release();
+    }
+  });
+
+
+
+  //특정문의글 조회 api
+app.get('/api/inquiries/:inquiryId', async (req, res) => {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const { inquiryId } = req.params;
+      const result = await conn.query("SELECT * FROM inquiries WHERE inquiryId = ?", [inquiryId]);
+      if (result.length > 0) {
+        res.json(result[0]);
+      } else {
+        res.status(404).json({ success: false, message: 'Inquiry not found' });
+      }
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error fetching inquiry details' });
+    } finally {
+      if (conn) conn.release();
+    }
+  });
+
+
+  //문의글에 답변추가 apiapp.post('/api/inquiries/:inquiryId/answer', async (req, res) => {
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const { inquiryId } = req.params;
+      const { answer } = req.body;
+      const result = await conn.query("UPDATE inquiries SET answer = ? WHERE inquiryId = ?", [answer, inquiryId]);
+      if (result.affectedRows > 0) {
+        res.json({ success: true, message: 'Answer submitted successfully' });
+      } else {
+        res.status(404).json({ success: false, message: 'Inquiry not found' });
+      }
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Error submitting answer' });
+    } finally {
+      if (conn) conn.release();
+    };
+
