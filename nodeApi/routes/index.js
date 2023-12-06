@@ -141,11 +141,12 @@ const callGpt35 = async(prompt) =>{
         const openai = new OpenAI({apiKey:myApiKey});
 
         const chatCompletion = await openai.chat.completions.create({
-            messages: [{ role: "user", content: "Say this is a test" }],
+            messages: [{ role: "user", content: prompt }],
             model: "gpt-3.5-turbo",
         })
 
-        console.log(chatCompletion.choices[0].message);
+        // console.log(chatCompletion.choices[0].message);
+        return chatCompletion.choices[0].message
 
         // 실패코드
         // const response = await openai.createChatCompletion({
@@ -172,9 +173,6 @@ const callGpt35 = async(prompt) =>{
         // console.log(gptResponse.data);
 
 
-
-        
-
     }catch(error){
         console.error('callGpr35() error >>>', error);
         return null;
@@ -184,18 +182,80 @@ const callGpt35 = async(prompt) =>{
 
 //gpt에게 데이터 요청리스너 조건 : gpt요청은 텍스트 값이 있을때만 시도해볼 수 있다.
 router.post('/chat', async(req, res)=> {
-    const prompt = 'say hello word';
+    const productNameData = req.query.productNameData;
+    //나무위키에 검색해서 html 가져오는 메서드
+
+    //html 제공해주고 상품에대해 설명해달라는 메서드
+    const prompt = `https://namu.wiki/w/${productNameData} 사이트 참고해서 ${productNameData}에 대해 조건에 맞게 설명해줘. 
+    조건) - 200자 내외로 요약
+    - 한국어로 설명
+    - 사이트 참고하지 못할경우 아는 내용 설명
+    - 정확하지 않은 정보면 '잘 모르겠습니다 출력'`;
+    console.log(prompt);
+    // getHtml(productNameData);
     const response = await callGpt35(prompt);
 
     if(response){
-        res.json({'response' : response});
-        console.log(response);
+        res.send({'response' : response});
+        console.log('/chat에서 값을 return했습니다.',response);
     }else{
         res.status(500).json({'error' :'Fail'})
     }
 });
 
+//나무위키에서 html 텍스트 가져와서 설명에 보충하기 gpt 간식
+// async function getHtml(productNameData){
+//     let productHtml = null;
+//     try{
+//         console.log(productNameData, '의 나무위키 HTML ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓');
+//         const htmlSource = [];
+//         // axios후 크롤링
+//         const response = await axios.get(`https://namu.wiki/w/${productNameData}`);
+//                 const $ = cheerio.load(response.data); //html 받아오기
+                
+//                 //html 전체를 가져와서 한글만 정제
+//                 // const koreanText = $.html().match(/[가-힣]+/g).join(' ');
+//                 // console.log(koreanText);
+                
 
+//                 //p태그 가져와서 주요 키워드가 포함된 녀석만 가져오기
+//                 const keyword = productNameData;
+//                 const extractedSentences = [];
+
+
+//                 // $('div:contains('+keyword+')').each((index, element) => {
+//                 //     const paragraph = $(element).text();
+//                 //     if (paragraph.includes(keyword)) {
+//                 //         extractedSentences.push(paragraph);
+//                 //     }
+//                 // });
+//                 // console.log(extractedSentences);
+
+
+//                 const maxResults =2;// 최대 가져올 수
+//                 const minCharCount =100; // 최소 문자 수 
+//                 // h2 바로 다음 div값 데이터 가져오기
+//                 $('h2').next().find('div').each((index, smallestDiv) => {
+//                     if (extractedSentences.length < maxResults) {
+//                         const paragraph = $(smallestDiv).text().trim();
+
+//                         if (paragraph.includes(keyword) && paragraph.length >= minCharCount) {
+//                             extractedSentences.push(paragraph);
+//                         }
+//                     } else {
+//                         return false; // 최대 결과 수에 도달하면 반복 중단
+//                     }
+//                 });
+//                 console.log(extractedSentences);
+
+            
+
+//     }catch(error){
+//         console.log("getImgUrl에서 에러 발생", error)
+//         throw error;
+//     }
+//     return productHtml;
+// }
 
 
 //사이트 서버에서 이미지 소스 크롤링
@@ -222,7 +282,7 @@ async function getImgUrl(barcodeNumData){
     return imageUrl;
 }
 
-// 사이트에서 글자 크롤링 해오기
+// 사이트에서 상품이름 크롤링 해오기
 async function getProductNameKr(barcodeNumData){
     let productName = null;
     try{
@@ -316,9 +376,6 @@ async function updateBarcodeImageUrl(barcodeNum, imageUrl){
         throw error; //호출하는 곳에서 에러 처리
     } 
 }
-
-
-
 
 router.get('/api/rankings', async (req, res) => {
     try {
