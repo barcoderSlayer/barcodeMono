@@ -219,7 +219,6 @@ router.post('/chat', async(req, res) => {
         console.log(error)
         return null
     }
-   
 });
 
 //나무위키에서 html 텍스트 가져와서 설명에 보충하기 gpt 간식

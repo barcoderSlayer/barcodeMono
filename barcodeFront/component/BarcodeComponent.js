@@ -8,17 +8,17 @@ const { width } = Dimensions.get('window');
 
 export default function BarcodeComponent(props) {
 
-    const [productData, setProductData] = useState(props.productData);
+    const [productData, setProductData] = useState(props.productData||{});
     const navigation = useNavigation();
     const isFocused = useIsFocused();
 
+    // props가 변경될 때마다 productData 업데이트
+    useEffect(() => {
+      if(props.productData){
 
-    //화면이 포커싱 되었을 때
-    useEffect(()=>{
-        // console.log(props.productName)
-        console.log("bacodrdComponents", props.productData)
-        
-    },[productData])
+        setProductData(props.productData);
+      }
+  }, [props.productData]);
 
   return (
     <TouchableOpacity
@@ -26,15 +26,16 @@ export default function BarcodeComponent(props) {
       style={styles.roundedRectangle}
     >
       <View style={styles.imageContainer}>
-        <Image  
-          source={require('../assets/icon.png')}
-          style={styles.imageStyle}
-        />
+        {
+          productData.imageUrl ?
+          <Image style={styles.imageStyle} resizeMode='contain' source={{uri:productData.imageUrl}}/> :
+          <Image style={styles.imageStyle} resizeMode='contain' source={require('../assets/imgless.jpeg')}/>
+        }
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.topText}>Product</Text>
-        {/* <Text style={styles.productName}>{productData}</Text> */}
-        <Text style={styles.rating}>10/10</Text>
+        <Text style={styles.topText}>{productData.barcodeNum}</Text>
+        <Text style={styles.productName}>{productData.productNameKr}</Text>
+        <Text style={styles.rating}>120</Text>
       </View>
     </TouchableOpacity>
   );

@@ -43,7 +43,6 @@
                 navigation.navigate("ProductInformationScreen", { barcodeData: data });
             }
 
-
                 //카메라 권한 요청 // 권한 확인
             };
             if (hasPermission === null) {

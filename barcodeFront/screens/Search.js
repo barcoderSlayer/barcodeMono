@@ -24,6 +24,13 @@ export default function Search({ navigation }) {
     getProductList();
   },[isFoucused])
 
+  //확인용
+  useEffect(() => {
+    console.log("productList State가 채워졌습니다.");
+    
+    console.log(productList);
+  },[productList])
+
   // AsyncStorage에서 바코드 리스트 가져오기
   const getProductList = async ()=> {
     try{
@@ -59,10 +66,10 @@ export default function Search({ navigation }) {
     <View style={styles.container}>
       <Button title='전체 삭제' onPress={clearAsyncStorage}></Button>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <BarcodeComponent productName="타이레놀" />
+        <BarcodeComponent/>
         {
           productList?.map((item, index )=>{
-            if (Object.keys(item).length !=0 ) {
+            if (Object.keys(item).length !== 0 ) {
               return (
                 <BarcodeComponent key={index} productData={item} />
               )
