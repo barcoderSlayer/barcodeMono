@@ -35,10 +35,10 @@ const App = () => {
           />
 
           <Text style={styles.question}>
-            답변 완료
+            문의 내역
           </Text>
           <Text style={styles.danger}>
-            답변 완료
+            답변 내용
           </Text>
 
           <TouchableOpacity style={styles.buttonQuestion} onPress={() => navigation.navigate("DetailedCheck",{screen:'DetailedCheck'})}>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   inputGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 30,
+    marginBottom: 70,
     bottom: 50,
   },
   label: {
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 0,
     marginBottom: 20,
-    bottom: 106,
+    bottom: 100,
     left: 20, 
   },
   stretch1: {     // 물음표 이미지
