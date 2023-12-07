@@ -13,17 +13,12 @@ const DetailScreen = () => {
   const [inquiryTimestamp, setInquiryTimestamp] = useState('');
   const [responseTimestamp, setResponseTimestamp] = useState('');
 
-  const [password, setPassword] = useState(''); // 비밀번호를 위한 상태 변수
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // 인증 상태
-
-
   // 예시 데이터  함수
   useEffect(() => {
     // 서버로부터 데이터를 받아오는거 구현해야함.
     //  예시
     setTitleContent('문의 제목은 여기에 들어갑니다.');
     setInquiryContent('문의한 내용이 여기에 들어갑니다.');
-    setResponseContent(''); // 특정 비밀번호를 입력 후 인증되면 답변 입력가능
     setInquiryTimestamp('2023-10-19T10:00:00Z');
     setResponseTimestamp('2023-10-20T15:30:00Z');
   }, []);
@@ -45,16 +40,6 @@ const DetailScreen = () => {
     }).format(date);
   };
 
-  // 답변확인 비밀번호 인증 후 등록   
-  const handlePasswordCheck = () => {
-    // 예시로 비밀번호가 '1234'인 경우 인증 처리
-    if (password === '1234') {
-      setIsAuthenticated(true);
-    } else {
-      alert('잘못된 비밀번호입니다.');
-      setIsAuthenticated(false);
-    }
-  };
 
   const handleSubmit = () => {  
     // 답변 게시 처리 로직
@@ -80,22 +65,6 @@ const DetailScreen = () => {
       </View>
       <View style={styles.contentContainer}>
         <Text style={styles.title}>답변 내용</Text>
-        {!isAuthenticated && (    // 답변 내용 - 비밀번호 입력 및 확인 버튼
-          <>
-            <TextInput
-              style={styles.passwordInput}
-              onChangeText={setPassword}
-              value={password}
-              placeholder="비밀번호를 입력하세요"
-              secureTextEntry={true}
-            />
-            <TouchableOpacity onPress={handlePasswordCheck} style={styles.button}>
-              <Text style={styles.buttonText}>확인</Text>
-            </TouchableOpacity>
-          </>
-        )}
-        {isAuthenticated && ( 
-          <>
             <TextInput // 답변 내용 텍스트 입력
               style={styles.contentInput}
               multiline={true}  // 여러 줄 입력 가능
@@ -106,8 +75,6 @@ const DetailScreen = () => {
             <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
               <Text style={styles.buttonText}>완료</Text>
             </TouchableOpacity>
-          </>
-        )}
         <Text style={styles.timestamp}>{formatTimestamp(responseTimestamp)}</Text>
       </View>
     </ScrollView>
