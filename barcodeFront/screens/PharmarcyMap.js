@@ -24,7 +24,7 @@ const PharmacyMap = () => {
         longitudeDelta: 0.0421,
       });
 
-      fetch(`http://172.30.1.42:4001/api/pharmacies?lat=${location.coords.latitude}&lng=${location.coords.longitude}`)
+      fetch(`http://172.30.1.39:4001/api/pharmacies?lat=${location.coords.latitude}&lng=${location.coords.longitude}`)
         .then(response => response.json())
         .then(data => setPharmacies(data))
         .catch(error => console.error(error));

@@ -215,32 +215,17 @@ appHospitals.use(express.json());
 appHospitals.use(helmet()); // 보안 헤더 설정
 
 appHospitals.get('/api/hospitals', (req, res) => {
-  const userLat = parseFloat(req.query.lat);
-  const userLng = parseFloat(req.query.lng);
-  if (isNaN(userLat) || isNaN(userLng)) {
-    return res.status(400).send('Invalid latitude or longitude');
-  }
-
-
-  const query = `
-    SELECT *, 
-      (6371 * acos(
-        cos(radians(?)) * cos(radians(latitude)) *
-        cos(radians(longitude) - radians(?)) +
-        sin(radians(?)) * sin(radians(latitude))
-      )) AS distance 
-    FROM hospitals
-    HAVING distance < 1
-    ORDER BY distance`;
-
-  db.query(query, [userLat, userLng, userLat], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('An error occurred');
-    }
-    res.json(results);
-  });
+    // hospitalID가 1부터 100까지인 병원만 선택
+    const query = 'SELECT * FROM hospitals WHERE hospitalID BETWEEN 1 AND 100 ORDER BY Name';
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('An error occurred');
+      }
+      res.json(results);
+    });
 });
+
 
 appHospitals.listen(portHospitals, () => {
   console.log(`병원 서버가 포트 ${portHospitals}에서 실행 중입니다`);
@@ -249,33 +234,19 @@ appHospitals.listen(portHospitals, () => {
 appPharmacies.use(express.json());
 appPharmacies.use(helmet());
 
-appPharmacies.get('/api/pharmacies', (req, res) => {
-  const userLat = parseFloat(req.query.lat);
-  const userLng = parseFloat(req.query.lng);
-  if (isNaN(userLat) || isNaN(userLng)) {
-    return res.status(400).send('Invalid latitude or longitude');
-  }
-
-  const query = `
-    SELECT *,
-      (6371 * acos(
-        cos(radians(?)) * cos(radians(latitude)) *
-        cos(radians(longitude) - radians(?)) +
-        sin(radians(?)) * sin(radians(latitude))
-      )) AS distance
-    FROM pharmacies
-    HAVING distance < 1
-    ORDER BY distance`;
-
-  db.query(query, [userLat, userLng, userLat], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('An error occurred');
-    }
-    res.json(results);
-  });
+appHospitals.get('/api/Pharmacies', (req, res) => {
+    // hospitalID가 1부터 100까지인 병원만 선택
+    const query = 'SELECT * FROM Pharmacies WHERE hospitalID BETWEEN 1 AND 100 ORDER BY Name';
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('An error occurred');
+      }
+      res.json(results);
+    });
 });
 
 appPharmacies.listen(portPharmacies, () => {
   console.log(`약국 서버가 포트 ${portPharmacies}에서 실행 중입니다`);
 });
+
