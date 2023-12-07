@@ -45,7 +45,7 @@ SELECT *,
     sin(radians(?)) * sin(radians(latitude))
     )) AS distance 
 FROM hospitals
-HAVING distance < 1
+
 ORDER BY distance`;
 
 db.query(query, [userLat, userLng, userLat], (err, results) => {
@@ -76,7 +76,7 @@ SELECT *,
     sin(radians(?)) * sin(radians(latitude))
     )) AS distance
 FROM pharmacies
-HAVING distance < 1
+
 ORDER BY distance`;
 
 db.query(query, [userLat, userLng, userLat], (err, results) => {
