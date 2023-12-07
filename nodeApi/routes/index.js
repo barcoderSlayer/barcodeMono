@@ -10,7 +10,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const config= require('../config');
 const OpenAI   = require('openai');
-
+router.use(express.json()); //Jsondata를 파싱하기 위해 필요 // 다시해보니 필요하지않음 // 다시해보니 필요함
 
 //DataBaseKey
 const db = mysql.createConnection({
@@ -188,26 +188,37 @@ const callGpt35 = async(prompt) =>{
 }
 
 //gpt에게 데이터 요청리스너 조건 : gpt요청은 텍스트 값이 있을때만 시도해볼 수 있다.
-router.post('/chat', async(req, res)=> {
-    const productNameData = req.query.productNameData;
+router.post('/chat', async(req, res) => {
+    try{
+    console.log(req.body.key1)
+    const productName = req.body.key1;
     //나무위키에 검색해서 html 가져오는 메서드
 
+    if (!productName) { //데이터가 없다면
+        res.status(400).json({'error': 'productName이 제공되지 않았습니다.'});
+        return;
+    }
+
     //html 제공해주고 상품에대해 설명해달라는 메서드
-    const prompt = `https://namu.wiki/w/${productNameData} 사이트 참고해서 ${productNameData}에 대해 조건에 맞게 설명해줘. 
+    const prompt = `https://namu.wiki/w/${productName} 사이트 참고해서 ${productName}에 대해 조건에 맞게 설명해줘. 
     조건) - 200자 내외로 요약
     - 한국어로 설명
     - 사이트 참고하지 못할경우 아는 내용 설명
     - 정확하지 않은 정보면 '잘 모르겠습니다 출력'`;
     console.log(prompt);
-    // getHtml(productNameData);
-    const response = await callGpt35(prompt);
-
-    if(response){
-        res.send({'response' : response});
-        console.log('/chat에서 값을 return했습니다.',response);
-    }else{
-        res.status(500).json({'error' :'Fail'})
+    // getHtml(productName); // gpt 기능 향상을 위한 상품 데이터 가져오서 학습시키기 (너무 비쌈)
+    // const response = "req.body"
+        const response = await callGpt35(prompt);
+        if(response){
+            res.send(response.content);
+            console.log('/chat에서 content 값을 return했습니다.',response.content);
+        }else{
+            res.status(500).json({'error' :'Fail'})
+        }
+    }catch(error){
+        console.log(error)
     }
+   
 });
 
 //나무위키에서 html 텍스트 가져와서 설명에 보충하기 gpt 간식
