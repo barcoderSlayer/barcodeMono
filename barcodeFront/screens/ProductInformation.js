@@ -56,7 +56,7 @@ export default function ProductInformation({ route }) {
         if(productData){
             saveBarcodeToStorage(); // productObject 스토리지에 저장
         }
-    },[barcodeNumData]);
+    },[productName]);
 
     // data get요청
     const getData = async() =>{
@@ -144,6 +144,7 @@ export default function ProductInformation({ route }) {
                 if(!parsedData.includes(productData)){
                     parsedData.push(productData);
                     await AsyncStorage.setItem('productData', JSON.stringify(parsedData));
+                    console.log('데이터를 저장했습니다.',JSON.stringify(parsedData));
                 }
             }
 

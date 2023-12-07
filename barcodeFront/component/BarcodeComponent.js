@@ -8,7 +8,7 @@ const { width } = Dimensions.get('window');
 
 export default function BarcodeComponent(props) {
 
-    const [barcodeData,setBarcodeData] = useState();
+    const [productData, setProductData] = useState(props.productData);
     const navigation = useNavigation();
     const isFocused = useIsFocused();
 
@@ -16,7 +16,9 @@ export default function BarcodeComponent(props) {
     //화면이 포커싱 되었을 때
     useEffect(()=>{
         // console.log(props.productName)
-    },[isFocused])
+        console.log("bacodrdComponents", props.productData)
+        
+    },[productData])
 
   return (
     <TouchableOpacity
@@ -31,7 +33,7 @@ export default function BarcodeComponent(props) {
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.topText}>Product</Text>
-        <Text style={styles.productName}>{props.productName}</Text>
+        {/* <Text style={styles.productName}>{productData}</Text> */}
         <Text style={styles.rating}>10/10</Text>
       </View>
     </TouchableOpacity>

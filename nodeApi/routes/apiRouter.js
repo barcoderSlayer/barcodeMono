@@ -1,35 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-//cheerio API 자바스크립트 크롤링 api↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 const axios = require('axios');
-const config= require('../config');
+const config = require('../config');
 const helmet = require('helmet');
-require('dotenv').config(); // 환경 변수 라이브러리
+require('dotenv').config();
 
-const appHospitals = express();
-const appPharmacies = express();
+const app = express(); // 기존의 express 앱 객체
 
-appPharmacies.use(express.json());
-appPharmacies.use(helmet());
-
-
-appHospitals.use(express.json());
-appHospitals.use(helmet()); // 보안 헤더 설정
+app.use(express.json());
+app.use(helmet());
 
 const portHospitals = 4000;
 const portPharmacies = 4001;
 
-
-//DataBaseKey
 const db = mysql.createConnection({
-host: config.DB_HOST,   
-user: config.DB_USER,
-password: config.DB_PASSWORD,
-database: config.DB_DATABASE
-})
+  host: config.DB_HOST,
+  user: config.DB_USER,
+  password: config.DB_PASSWORD,
+  database: config.DB_DATABASE
+});
 
-appHospitals.get('/api/hospitals', (req, res) => {
+
+app.get('/api/hospitals', (req, res) => {
 const userLat = parseFloat(req.query.lat);
 const userLng = parseFloat(req.query.lng);
 if (isNaN(userLat) || isNaN(userLng)) {
@@ -57,11 +50,11 @@ res.json(results);
 });
 });
 
-appHospitals.listen(portHospitals, () => {
+app.listen(portHospitals, () => {
 console.log(`병원 서버가 포트 ${portHospitals}에서 실행 중입니다`);
 });
 
-appPharmacies.get('/api/pharmacies', (req, res) => {
+app.get('/api/pharmacies', (req, res) => {
 const userLat = parseFloat(req.query.lat);
 const userLng = parseFloat(req.query.lng);
 if (isNaN(userLat) || isNaN(userLng)) {
@@ -88,7 +81,7 @@ res.json(results);
 });
 });
 
-appPharmacies.listen(portPharmacies, () => {
+app.listen(portPharmacies, () => {
 console.log(`약국 서버가 포트 ${portPharmacies}에서 실행 중입니다`);
 });
 
@@ -146,7 +139,7 @@ try {
 
 
 //문의글에 답변추가 
-apiapp.post('/api/inquiries/:inquiryId/answer', async (req, res) => {
+app.post('/api/inquiries/:inquiryId/answer', async (req, res) => {
 let conn;
 try {
     conn = await pool.getConnection();
