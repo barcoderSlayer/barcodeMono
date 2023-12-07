@@ -1,32 +1,19 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 
+import BarcodeComponent from '../component/BarcodeComponent';
+
+// 내가 검색했던 내용이 로컬에 남기때문에 최근 스캔 기록일수록 위쪽에 있어야한다
+// 스캔성공시 asyncStoryge barcodeData리스트에 넣는다.
+// search페이지가 포커싱될때마다 스토리지 시스트 불러와 순서데로 상품바코드 컴포넌트에 넣는다.
 export default function Search({ navigation }) {
-  // Generate 10 items
-  const items = Array.from({ length: 10 }, (_, index) => (
-    <TouchableOpacity
-      key={index}
-      onPress={() => navigation.navigate('ProductInformation', { /* 나중에 바코드 넣어야지 */ })}
-      style={styles.roundedRectangle}
-    >
-      <View style={styles.imageContainer}>
-        <Image  
-          source={require('../assets/icon.png')}
-          style={styles.imageStyle}
-        />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.topText}>TOP{index + 1}</Text>
-        <Text style={styles.productName}>상품명</Text>
-        <Text style={styles.rating}>10/10</Text>
-      </View>
-    </TouchableOpacity>
-  ));
+
+
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {items}
+        <BarcodeComponent productName="타이레놀" />
       </ScrollView>
     </View>
   );

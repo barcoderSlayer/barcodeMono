@@ -8,9 +8,9 @@
 
     export default function Camera(){
         
-        const [hasPermission, setHasPermission] = useState(null);
-        const [scanned, setScanned] = useState(false);
-        const navigation = useNavigation();
+        const [hasPermission, setHasPermission] = useState(null); // 카메라 접근 권한
+        const [scanned, setScanned] = useState(false); //스캔여부
+        const navigation = useNavigation(); 
         const isFocused = useIsFocused();
 
 

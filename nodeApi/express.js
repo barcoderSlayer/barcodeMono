@@ -7,10 +7,14 @@ const express = require("express");
 //controller에 요청
 const indexRouter = require('./routes/index');
 
+const apiRouter = require('./routes/apiRouter');
+
 
 const app =express();
 //router
 app.use('/', indexRouter);
+
+app.use('/api', apiRouter);
 
 app.listen(3000,() => {
     console.log("server onload")
