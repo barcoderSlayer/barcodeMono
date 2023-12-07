@@ -9,7 +9,7 @@ const indexRouter = require('./routes/index');
 
 
 const app =express();
-
+//router
 app.use('/', indexRouter);
 
 app.listen(3000,() => {
