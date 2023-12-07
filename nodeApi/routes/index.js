@@ -10,7 +10,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const config= require('../config');
 const OpenAI   = require('openai');
-
+router.use(express.json()); //Jsondata를 파싱하기 위해 필요 // 다시해보니 필요하지않음 // 다시해보니 필요함
 
 //DataBaseKey
 const db = mysql.createConnection({
@@ -56,19 +56,19 @@ router.get('/', (req,res) => {
 // 비동기적으로 가져와야한다. async ...
 // 순서 : 데이터베이스에 바코드 넘버가 있는지, → 데이터베이스에 바코드 이미지가 있는지 → 바코드 이름이 있는지
 router.get('/barcodePage/', async(req,res) => {
-
-    // result 객체 초기화 = 데이터 자동으러 얻와 점점 채우는 작업 그리고 return
+    try{
+  // result 객체 초기화 = 데이터 자동으러 얻와 점점 채우는 작업 그리고 return
     var barcodeData = [{
-        barcodeNum: null,
-        productNameKr: null,
-        productNameEn: null,
-        scanCnt: null,
-        imageUrl: null,
-        division: null
+    barcodeNum: null,
+    productNameKr: null,
+    productNameEn: null,
+    scanCnt: null,
+    imageUrl: null,
+    division: null
     }];
     const barcodeNumData = req.query.barcodeNumData;
     console.log('/barcodePage/barcodeNumData :', barcodeNumData )
-    
+
     const sql = `select * from products where barcodeNum = '${barcodeNumData}'`;
     db.query(sql, async(err, result) => {
         if (err) {
@@ -78,19 +78,19 @@ router.get('/barcodePage/', async(req,res) => {
         }
         
         // 데이터베이스에서 레코드를 가져왔는데 결과가 없으면 새로운 데이터 추가
-        if (result.length == 0) {
+        if (result.length === 0) {
             console.log("데이터를 찾을 수 없습니다. 새로운 데이터를 추가합니다.");
             const addedBarcodeResult =  addBarcodeNumData(barcodeNumData, res); //error를 띄우기위해 rout핸들러인 res를 전달해줘서 사용한다.
             // 다시 요청하기를 유도해서 데이터 추가를 노리자
-        } else{ 
-               // DB에서 가져온 데이터를 barcodeData에 채워넣기
-        let dbData = result[0]; // 예제로 간단하게 첫 번째 레코드만 가져오도록 했습니다.
-        barcodeData[0].barcodeNum = dbData.barcodeNum;
-        barcodeData[0].productNameKr = dbData.productNameKr;
-        barcodeData[0].productNameEn = dbData.productNameEn;
-        barcodeData[0].scanCnt = dbData.scanCnt;
-        barcodeData[0].imageUrl = dbData.imageUrl;
-        barcodeData[0].division = dbData.division;
+        } else{
+            // DB에서 가져온 데이터를 barcodeData에 채워넣기
+            let dbData = result[0]; // 예제로 간단하게 첫 번째 레코드만 가져오도록 했습니다.
+            barcodeData[0].barcodeNum = dbData.barcodeNum;
+            barcodeData[0].productNameKr = dbData.productNameKr;
+            barcodeData[0].productNameEn = dbData.productNameEn;
+            barcodeData[0].scanCnt = dbData.scanCnt;
+            barcodeData[0].imageUrl = dbData.imageUrl;
+            barcodeData[0].division = dbData.division;
         }
 
         //만약 productNameKr 이 null 이라면
@@ -114,7 +114,7 @@ router.get('/barcodePage/', async(req,res) => {
             console.log("이미지 데이터가 없습니다. 크롤링 해오겠습니다.")
             const crowlImgUrl =  await getImgUrl(barcodeNumData); //beepscan 서버에 이미지 값 가져오기 (크롤링)
             console.log("이미지url 크롤링함수에서 받은 데이터",crowlImgUrl);
-    
+
             if(crowlImgUrl != null){ //imgUrl 함수 실행 결과값이 있다면 db에 추가하고 초기화 값에 추가하기
                 updateBarcodeImageUrl(barcodeNumData,crowlImgUrl);
                 barcodeData[0].imageUrl= crowlImgUrl;
@@ -128,6 +128,13 @@ router.get('/barcodePage/', async(req,res) => {
         console.log("데이터를 보내겠습니다.", result)
         res.send(result);
     })
+    }catch(error){
+        console.error('에러 발생:', error);
+        res.status(500).send('서버 오류, 바코드 처리 중 에러가 발생했습니다.');
+    
+    }
+
+
 })
 //↑↑↑↑문제점이 크롤링한 데이터를 바로 프론트에 전달해주지 못하고 db에 등록한것을 다시 불러와야하는 단점의 알고림즈
 //↑↑ 문제는 아마 비동기 처리를 하지않았기때문이다.
@@ -181,26 +188,37 @@ const callGpt35 = async(prompt) =>{
 }
 
 //gpt에게 데이터 요청리스너 조건 : gpt요청은 텍스트 값이 있을때만 시도해볼 수 있다.
-router.post('/chat', async(req, res)=> {
-    const productNameData = req.query.productNameData;
+router.post('/chat', async(req, res) => {
+    try{
+    console.log(req.body.key1)
+    const productName = req.body.key1;
     //나무위키에 검색해서 html 가져오는 메서드
 
+    if (!productName) { //데이터가 없다면
+        res.status(400).json({'error': 'productName이 제공되지 않았습니다.'});
+        return;
+    }
+
     //html 제공해주고 상품에대해 설명해달라는 메서드
-    const prompt = `https://namu.wiki/w/${productNameData} 사이트 참고해서 ${productNameData}에 대해 조건에 맞게 설명해줘. 
+    const prompt = `https://namu.wiki/w/${productName} 사이트 참고해서 ${productName}에 대해 조건에 맞게 설명해줘. 
     조건) - 200자 내외로 요약
     - 한국어로 설명
     - 사이트 참고하지 못할경우 아는 내용 설명
     - 정확하지 않은 정보면 '잘 모르겠습니다 출력'`;
     console.log(prompt);
-    // getHtml(productNameData);
-    const response = await callGpt35(prompt);
-
-    if(response){
-        res.send({'response' : response});
-        console.log('/chat에서 값을 return했습니다.',response);
-    }else{
-        res.status(500).json({'error' :'Fail'})
+    // getHtml(productName); // gpt 기능 향상을 위한 상품 데이터 가져오서 학습시키기 (너무 비쌈)
+    // const response = "req.body"
+        const response = await callGpt35(prompt);
+        if(response){
+            res.send(response.content);
+            console.log('/chat에서 content 값을 return했습니다.',response.content);
+        }else{
+            res.status(500).json({'error' :'Fail'})
+        }
+    }catch(error){
+        console.log(error)
     }
+   
 });
 
 //나무위키에서 html 텍스트 가져와서 설명에 보충하기 gpt 간식
@@ -210,7 +228,7 @@ router.post('/chat', async(req, res)=> {
 //         console.log(productNameData, '의 나무위키 HTML ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓');
 //         const htmlSource = [];
 //         // axios후 크롤링
-//         const response = await axios.get(`https://namu.wiki/w/${productNameData}`);
+//         const response = await axios.get(`https:de//namu.wiki/w/${productNameData}`);
 //                 const $ = cheerio.load(response.data); //html 받아오기
                 
 //                 //html 전체를 가져와서 한글만 정제
@@ -277,7 +295,8 @@ async function getImgUrl(barcodeNumData){
 
     }catch(error){
         console.log("getImgUrl에서 에러 발생", error)
-        throw error;
+        // throw error; 서버 터짐
+        return null
     }
     return imageUrl;
 }
@@ -290,20 +309,32 @@ async function getProductNameKr(barcodeNumData){
         const productNameArr = [];
         // axios후 크롤링
         const response = await axios.get(`https://www.beepscan.com/barcode/${barcodeNumData}`);
-                const $ = cheerio.load(response.data); //html 받아오기
-                
-                $('div.container>p>b').each((index, item) =>{
-                    console.log("크롤링 해온 상품명 = ",$(item).text().trim()); //item에서 attribs class 안에 src만 받아오기
-                    productNameArr.push($(item).text());
-                    //얻어온url을 db 이미지에 넣기
-                }); //이미지 가지고오기
-                productName = productNameArr.length > 0 ? productNameArr[0] : null;
-
+            const $ = cheerio.load(response.data); //html 받아오기
+            
+            $('div.container>p>b').each((index, item) =>{
+                console.log("크롤링 해온 상품명 = ",$(item).text().trim()); //item에서 attribs class 안에 src만 받아오기
+                productNameArr.push($(item).text());
+                //얻어온url을 db 이미지에 넣기
+            }); //이미지 가지고오기
+            productName = productNameArr.length > 0 ? productNameArr[0] : null;
+            //숫자 나오기 전까지만 정제하기
+            const regex = /^(.*?)(\d+)/;
+            const match = regex.exec(productName);
+            if (match && match.length >= 2) {
+                const cleanedProductName = match[1].trim();
+                console.log('cleanedProductName => ',cleanedProductName);
+                return cleanedProductName
+            } else {
+                console.log("일치하는 항목을 찾을 수 없습니다.");
+                return productName;
+            }
     }catch(error){
         console.log("getProductNameKr에서 에러 발생", error)
-        throw error;
+        // throw error;
+        return null
     }
-    return productName;
+
+    
 }
 
 

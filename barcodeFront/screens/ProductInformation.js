@@ -23,10 +23,11 @@ export default function ProductInformation({ route }) {
     const [imgUrl,setImgUrl]= useState(""); //상품 이미지 url
     const [productData, setProductData]= useState({}); //상품 정보
     const [loading, setLoading]=useState(); //로딩 => 데이터 불러올때 사용
-    const [productName,setProductName] = useState(); //상품 이름
+    const [productName,setProductName] = useState(""); //상품 이름
     const [productDivision, setProductDivision]=useState();
     const [modalVisible, setModalVisible] = useState(false); //모달창 보기
     const [barcodeNumData, setBarcodeNumdata] = useState("");
+    const [gptText,setGptText] = useState(""); //gpt 설명 요청시 채워짐
 
     //이미지 확대해서 보기 모달창
     const toggleModal = () => {
@@ -42,26 +43,34 @@ export default function ProductInformation({ route }) {
     const navigation = useNavigation();
 
     useEffect(()=>{
-        setImgUrl({url:"https://reactnative.dev/img/tiny_logo.png"}); //이미지 url 세팅
-        console.log("barcodeData = ", barcodeNumData);
-        setBarcodeNumdata(route.params);
-        getData();
-    },[]);
+        console.log("barcodeData = ", route.params.barcodeData);
+        setBarcodeNumdata(route.params.barcodeData);
+        
+    },[route.params]);
+
+    useEffect(() =>{
+        if(barcodeNumData){
+            getData();
+        }
+    },[barcodeNumData]);
 
     // data get요청
     const getData = async() =>{
-        const response = await axios.get(`${config.LOCALHOST_IP}/barcodePage/?barcodeNumData=${barcodeNumData}`)
-        .then(function (response) {
-            console.log("요청 후 받아온 데이터",response.data);
-            setProductData(response.data)
-            setProductName(response.data[0].productNameKr);
-            setProductDivision(response.data[0].division);
-            setImgUrl(response.data[0].imageUrl);
-            console.log(response.data[0].imageUrl);
-        })
-        .catch(function (error){
-            console.log(error);
-        });
+        try {
+            const response = await axios.get(`${config.LOCALHOST_IP}/barcodePage/?barcodeNumData=${barcodeNumData}`);
+            console.log("요청 후 받아온 데이터", response.data);
+            if (response.data && response.data.length > 0) {
+                const data = response.data[0];
+                setProductData(data);
+                setProductName(data.productNameKr);
+                setProductDivision(data.division);
+                setImgUrl(data.imageUrl);
+            } else {
+                console.log("데이터가 없습니다.");
+            }
+        } catch (error) {
+            console.error("데이터 요청 중 에러 발생:", error);
+        }
     }
 
     const handlePress = () => {
@@ -76,12 +85,14 @@ export default function ProductInformation({ route }) {
     //productName이 존재할 시 뜨는 gpt요청 버튼 클릭시 데이터 받아오기 => state에 데이터 넣고 클라이언트에게 보여주기
     const gptRequest = async() => {
         try{
-            const response = await axios.post(
-                `http://${config.LOCALHOST_IP}/chat`,
-                {
-                    productNameData:productName
-                })
-                console.log(response);
+            console.log("gptRequest() 실행합니다")
+            const postData = {
+                key1:`${productName}`
+            }
+            // console.log(postData) 
+            const response = await axios.post(`${config.LOCALHOST_IP}/chat` , postData)
+                console.log('gptRequest()  => ', response.data);
+                setGptText(response.data)
         } catch(error){
             console.error('gptRequest 요청 중 error발생 : ',error)
         }
@@ -150,12 +161,20 @@ export default function ProductInformation({ route }) {
             <View style={styles.bottomInfoContainer}>
                 <View style={styles.bottomInfoBox}>
                     <Text style={{fontWeight:'bold'}}>상품설명</Text>
-                    <Text style={{marginLeft:width/5}}>gptText</Text>
+                    {/* productName이 있고 gptText가 없다면 버튼 만들기 */}
+                    {
+                        productName ?
+                            gptText ?
+                            <Text>{gptText}</Text>:
+                            <Button title="gpt에게 물어보기" onPress={gptRequest}/>
+                        :
+                        <Text>데이터를 찾지 못했습니다.</Text>
+                    }
                 </View>
-                <View style={styles.bottomInfoBox}>
+                {/* <View style={styles.bottomInfoBox}>
                     <Text style={{fontWeight:'bold'}}>구성성분</Text>
                     <Text style={{marginLeft:width/5}}>구성성분text</Text>
-                </View>
+                </View> */}
             </View>
             {titleName}
             <Button style={{bottomContainer: {
@@ -164,7 +183,7 @@ export default function ProductInformation({ route }) {
                 left:0,
                 right:0,
             },
-            }} title="click get object start" onPress={handlePress}/>
+            }} title="Reload" onPress={handlePress}/>
             </ScrollView>
              {/* 모달창 세팅 */}
             <Modal
