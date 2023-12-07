@@ -21,76 +21,49 @@ const portHospitals = 4000;
 const portPharmacies = 4001;
 
 
-//DataBaseKey
-const db = mysql.createConnection({
-host: config.DB_HOST,   
-user: config.DB_USER,
-password: config.DB_PASSWORD,
-database: config.DB_DATABASE
-})
+//박성호   api
+const helmet = require('helmet');
+require('dotenv').config(); // 환경 변수 라이브러리
+
+appHospitals.use(express.json());
+appHospitals.use(helmet()); // 보안 헤더 설정
 
 appHospitals.get('/api/hospitals', (req, res) => {
-const userLat = parseFloat(req.query.lat);
-const userLng = parseFloat(req.query.lng);
-if (isNaN(userLat) || isNaN(userLng)) {
-return res.status(400).send('Invalid latitude or longitude');
-}
-
-
-const query = `
-SELECT *, 
-    (6371 * acos(
-    cos(radians(?)) * cos(radians(latitude)) *
-    cos(radians(longitude) - radians(?)) +
-    sin(radians(?)) * sin(radians(latitude))
-    )) AS distance 
-FROM hospitals
-
-ORDER BY distance`;
-
-db.query(query, [userLat, userLng, userLat], (err, results) => {
-if (err) {
-    console.error(err);
-    return res.status(500).send('An error occurred');
-}
-res.json(results);
+    // hospitalID가 1부터 100까지인 병원만 선택
+    const query = 'SELECT * FROM hospitals WHERE hospitalID BETWEEN 1 AND 100 ORDER BY Name';
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('An error occurred');
+      }
+      res.json(results);
+    });
 });
-});
+
 
 appHospitals.listen(portHospitals, () => {
-console.log(`병원 서버가 포트 ${portHospitals}에서 실행 중입니다`);
+  console.log(`병원 서버가 포트 ${portHospitals}에서 실행 중입니다`);
 });
 
-appPharmacies.get('/api/pharmacies', (req, res) => {
-const userLat = parseFloat(req.query.lat);
-const userLng = parseFloat(req.query.lng);
-if (isNaN(userLat) || isNaN(userLng)) {
-return res.status(400).send('Invalid latitude or longitude');
-}
+appPharmacies.use(express.json());
+appPharmacies.use(helmet());
 
-const query = `
-SELECT *,
-    (6371 * acos(
-    cos(radians(?)) * cos(radians(latitude)) *
-    cos(radians(longitude) - radians(?)) +
-    sin(radians(?)) * sin(radians(latitude))
-    )) AS distance
-FROM pharmacies
-
-ORDER BY distance`;
-
-db.query(query, [userLat, userLng, userLat], (err, results) => {
-if (err) {
-    console.error(err);
-    return res.status(500).send('An error occurred');
-}
-res.json(results);
-});
+appHospitals.get('/api/Pharmacies', (req, res) => {
+    // hospitalID가 1부터 100까지인 병원만 선택
+    const query = 'SELECT * FROM Pharmacies WHERE hospitalID BETWEEN 1 AND 100 ORDER BY Name';
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('An error occurred');
+      }
+      res.json(results);
+    });
 });
 
 appPharmacies.listen(portPharmacies, () => {
-console.log(`약국 서버가 포트 ${portPharmacies}에서 실행 중입니다`);
+  console.log(`약국 서버가 포트 ${portPharmacies}에서 실행 중입니다`);
 });
+
 
 //문의글 생성 api
 app.post('/api/inquiries', async (req, res) => {
