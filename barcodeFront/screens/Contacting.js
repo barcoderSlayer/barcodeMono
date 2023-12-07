@@ -1,25 +1,55 @@
-import React, { useState, useRef } from 'react';
+// Contacting.js <문의하기 페이지>
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
   const navigation = useNavigation();
-  const [text1Position, setText1Position] = useState({ top: 420, left: 20 });   // 텍스트 문장 첫번째
-  const [text2Position, setText2Position] = useState({ top: 470, left: 20 });   // 텍스트 문장 두번째
+  const [inquiryTitle, setInquiryTitle] = useState('');
+  const [inquiryContent, setInquiryContent] = useState('');
+  const [text1Position, setText1Position] = useState({ top: 450, left: 20 }); // 접수된 문의 텍스트 위치 조정
+  const [text2Position, setText2Position] = useState({ top: 495, left: 20 }); // 문의 처리 내역 텍스트 위치 조정
+
 
   const moveText1 = () => {
-    setText1Position({ top: text1Position.top + 10, left: text1Position.left + 10 });
+    setText1Position({ top: text1Position.top + 10, left: text1Position.left + 10 }); 
   }
 
   const moveText2 = () => {
     setText2Position({ top: text2Position.top + 10, left: text2Position.left + 10 });
   };
 
-  return ( 
-  <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-  > 
+  const submitInquiry = async () => {
+    try {
+      const response = await fetch('http://your_backend_ip:3000/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: inquiryTitle,
+          content: inquiryContent,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data) {
+        console.log('문의가 성공적으로 저장되었습니다.');
+        navigation.goBack();
+      } else {
+        console.error('서버로부터 응답이 올바르지 않습니다.');
+      }
+    } catch (error) {
+      console.error('문의 저장 중 오류가 발생했습니다:', error);
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
     <View style={styles.container}>
       {/* Header or Navigation Bar */}
       <View style={styles.header}> 
@@ -65,15 +95,14 @@ const App = () => {
         </Text>
 
         {/* Footer or Action Area */}
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.submitButton}>
-            <Text style={styles.submitButtonText}>확인</Text>
-          </TouchableOpacity>
+        {/* // '확인' 버튼에 submitInquiry 함수 연결 */}
+        <TouchableOpacity style={styles.submitButton} onPress={submitInquiry}>
+          <Text style={styles.submitButtonText}>확인</Text>
+        </TouchableOpacity>
         {/* Cancel Button */}
         <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate("Home",{screen:'Home'})}>
           <Text style={styles.cancelButtonText}>취소</Text>
         </TouchableOpacity>
-        </View>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -151,12 +180,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ADA4A5',
     position: 'absolute', 
     padding: 20,
-    width: 200, 
+    width: 193, 
     height: 61, 
     borderRadius: 0,
     alignItems: 'center',
-    top: 0, 
-    left: 180, 
+    bottom: 0, 
+    left: 192, 
   },
   submitButtonText: { // 확인 텍스트
     fontSize: 16,
@@ -168,12 +197,12 @@ const styles = StyleSheet.create({
     marginTop: 10, 
     backgroundColor: '#E4E4E4', 
     position: 'absolute', 
-    width: 200, 
+    width: 193, 
     height: 61, 
     borderRadius: 0,
     alignItems: 'center',
-    bottom: -16,
-    right: 172, 
+    bottom: 0,
+    right: 192, 
   },
   cancelButtonText: { // 취소 텍스트
     fontSize: 16,
