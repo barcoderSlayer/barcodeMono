@@ -24,7 +24,7 @@ const PharmacyMap = () => {
         longitudeDelta: 0.0421,
       });
 
-      fetch('http://172.30.1.39:4000/api/pharmacies')
+      fetch(`${config.LOCALHOST_IP}/api/pharmacies`)
         .then(response => response.json())
         .then(data => {
           console.log('Pharmacies data:', data);

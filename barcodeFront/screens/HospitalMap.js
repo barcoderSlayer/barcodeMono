@@ -24,7 +24,7 @@ const HospitalMap = () => {
         longitudeDelta: 0.0421,
       });
 
-      fetch('http://172.30.1.39:4000/api/hospitals')
+      fetch(`${config.LOCALHOST_IP}/api/hospitals`)
         .then(response => response.json())
         .then(data => {
           console.log('Hospitals data:', data);

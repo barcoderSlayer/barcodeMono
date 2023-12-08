@@ -30,7 +30,7 @@ export default function MyPage({ route }) {
 
 
       <View style={styles.InternalmenuContainer}>
-        <TouchableOpacity style={styles.Language_menuItem} onPress={() => navigation.navigate("PharmaceuticalTips",{screen:'PharmaceuticalTips'})}>
+        <TouchableOpacity style={styles.Language_menuItem} onPress={() => navigation.navigate("LanguageModiScreen",{screen:'LanguageModiScreen'})}>
           <Text style={[styles.Detail_menuItemText, { top: -55, left: 90 }]}>언어설정</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.Inquiry_menuItem} onPress={() => navigation.navigate("Contacting",{screen:'Contacting'})}>

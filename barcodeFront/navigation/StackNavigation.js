@@ -33,6 +33,7 @@ import MyPage from '../screens/MyPage';
 import Contacting from '../screens/Contacting';
 import AnswerCheck from '../screens/AnswerCheck';
 import DetailedCheck from '../screens/DetailedCheck';
+import LanguageModi from '../screens/LanguageModi';
 
 
 // 모듈 변수 선언
@@ -247,6 +248,20 @@ const MyPageStackNavigator = ({ navigation, route }) => {
             <Stack.Screen
                 name="DetailedCheck"
                 component={DetailedCheck}
+                options={{
+                    title: 'DetailedCheck',
+                    headerStyle: {
+                        backgroundColor: '#ADA4A5', 
+                    },
+                    headerTintColor: '#fff', 
+                    headerTitleStyle: {
+                        fontWeight: 'bold', 
+                    },
+                }}
+            />
+            <Stack.Screen
+                name="LanguageModiScreen"
+                component={LanguageModi}
                 options={{
                     title: 'DetailedCheck',
                     headerStyle: {

@@ -33,6 +33,7 @@ export default function LanguageModi() {
   const handleLanguageSelect = async (language) => {
     setSelectedLanguage(language);
     await AsyncStorage.setItem('selectedLanguage', language);
+    alert('Success')
   };
 
   return (
