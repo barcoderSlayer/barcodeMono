@@ -18,7 +18,7 @@ const App = () => {
 
   const submitInquiry = async () => {
     try {
-      const response = await fetch('http://your_backend_ip:3000/api/inquiries', {
+      const response = await fetch(`${config.LOCALHOST_IP}/api/inquiries`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

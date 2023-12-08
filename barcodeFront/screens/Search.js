@@ -46,7 +46,6 @@ export default function Search({ navigation }) {
     }catch(err){
       console.log("getProductList() => Error", err)
     }
-
   }
 
   // AsyncStorage productData모든 데이터 비우기
