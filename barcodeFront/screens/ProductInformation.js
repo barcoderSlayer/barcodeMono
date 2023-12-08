@@ -56,7 +56,7 @@ export default function ProductInformation({ route }) {
         if(productData){
             saveBarcodeToStorage(); // productObject 스토리지에 저장
         }
-    },[productName]);
+    },[barcodeNumData]);
 
     // data get요청
     const getData = async() =>{

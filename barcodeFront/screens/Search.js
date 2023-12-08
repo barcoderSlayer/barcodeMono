@@ -66,7 +66,7 @@ export default function Search({ navigation }) {
     <View style={styles.container}>
       <Button title='전체 삭제' onPress={clearAsyncStorage}></Button>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <BarcodeComponent/>
+        {/* <BarcodeComponent/> */}
         {
           productList?.map((item, index )=>{
             if (Object.keys(item).length !== 0 ) {

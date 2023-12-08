@@ -22,7 +22,7 @@ export default function BarcodeComponent(props) {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ProductInformation', { /* 나중에 바코드 넣어야지 */ })}
+      onPress={() => navigation.navigate('ProductInformationScreen',{ barcodeData: productData.barcodeNum })}
       style={styles.roundedRectangle}
     >
       <View style={styles.imageContainer}>
