@@ -11,6 +11,7 @@ import { TouchableHighlight } from 'react-native-gesture-handler';
 // .env에 환경변수로 EXPO_PUBLIC_API_KEY= 123 ... 을입력해서 사용
 import Constants from 'expo-constants';
 import config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -51,6 +52,9 @@ export default function ProductInformation({ route }) {
     useEffect(() =>{
         if(barcodeNumData){
             getData();
+        }
+        if(productData){
+            saveBarcodeToStorage(); // productObject 스토리지에 저장
         }
     },[barcodeNumData]);
 
@@ -121,6 +125,34 @@ export default function ProductInformation({ route }) {
     //         </View>
     //     )
     // }
+
+// AsyncStorage에 바코드 데이터 저장
+    const saveBarcodeToStorage = async ()=>{
+        try{
+            // AsyncStorage에서 저장된 바코드 데이터 불러오기
+            const existingData = await AsyncStorage.getItem('productData');
+
+            //기존 데이터가 없을 경우
+            if(!existingData){
+                const newData = [productData];
+                await AsyncStorage.setItem('productData',JSON.stringify(newData));
+            }else{
+                //기존 데이터가 있을경우
+                const parsedData = JSON.parse(existingData);
+
+                // 중복된 데이터를 방지하기 위해 이미 존재하는지 확인
+                if(!parsedData.includes(productData)){
+                    parsedData.push(productData);
+                    await AsyncStorage.setItem('productData', JSON.stringify(parsedData));
+                    console.log('데이터를 저장했습니다.',JSON.stringify(parsedData));
+                }
+            }
+
+        }catch(error){
+            console.log("바코드 데이터 스토리지 저장 중 에러 ",error);
+        }
+    }
+
 
     return (
         <View style={styles.container}>

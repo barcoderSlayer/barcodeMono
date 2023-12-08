@@ -33,7 +33,6 @@ export default function ProductScan() {
     // 카메라 페이지 이동
     navigation.navigate("CameraScreen");
     
-
   };
 
   return (

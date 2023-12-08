@@ -1,29 +1,30 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
-//cheerio API 자바스크립트 크롤링 api↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 const axios = require('axios');
-const config= require('../config');
+const config = require('../config');
 const helmet = require('helmet');
-require('dotenv').config(); // 환경 변수 라이브러리
+require('dotenv').config();
 
-const appHospitals = express();
-const appPharmacies = express();
+const app = express(); // 기존의 express 앱 객체
 
-appPharmacies.use(express.json());
-appPharmacies.use(helmet());
-
-
-appHospitals.use(express.json());
-appHospitals.use(helmet()); // 보안 헤더 설정
+app.use(express.json());
+app.use(helmet());
 
 const portHospitals = 4000;
 const portPharmacies = 4001;
 
 
-//박성호   api
+const db = mysql.createConnection({
+  host: config.DB_HOST,
+  user: config.DB_USER,
+  password: config.DB_PASSWORD,
+  database: config.DB_DATABASE
+});
+
 const helmet = require('helmet');
 require('dotenv').config(); // 환경 변수 라이브러리
+
 
 appHospitals.use(express.json());
 appHospitals.use(helmet()); // 보안 헤더 설정
@@ -47,6 +48,7 @@ appHospitals.listen(portHospitals, () => {
 
 appPharmacies.use(express.json());
 appPharmacies.use(helmet());
+
 
 appHospitals.get('/api/Pharmacies', (req, res) => {
     // hospitalID가 1부터 100까지인 병원만 선택
@@ -119,7 +121,7 @@ try {
 
 
 //문의글에 답변추가 
-apiapp.post('/api/inquiries/:inquiryId/answer', async (req, res) => {
+app.post('/api/inquiries/:inquiryId/answer', async (req, res) => {
 let conn;
 try {
     conn = await pool.getConnection();
