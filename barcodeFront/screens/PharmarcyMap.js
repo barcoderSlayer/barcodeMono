@@ -3,9 +3,9 @@ import { StyleSheet, View, ActivityIndicator, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
-const HospitalMap = () => {
+const PharmacyMap = () => {
   const [currentRegion, setCurrentRegion] = useState(null);
-  const [hospitals, setHospitals] = useState([]);
+  const [pharmacies, setPharmacies] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
@@ -24,15 +24,15 @@ const HospitalMap = () => {
         longitudeDelta: 0.0421,
       });
 
-      fetch('http://172.30.1.39:4000/api/hospitals')
+      fetch('http://172.30.1.39:4000/api/pharmacies')
         .then(response => response.json())
         .then(data => {
-          console.log('Hospitals data:', data);
-          setHospitals(data);
+          console.log('Pharmacies data:', data);
+          setPharmacies(data); // 함수명을 올바르게 수정
         })
         .catch(error => {
-          console.error('Error fetching hospitals:', error);
-          setErrorMsg('Error fetching hospitals');
+          console.error('Error fetching pharmacies:', error);
+          setErrorMsg('Error fetching pharmacies');
         });
     })();
   }, []);
@@ -52,20 +52,20 @@ const HospitalMap = () => {
         initialRegion={currentRegion}
         showsUserLocation={true}
       >
-        {hospitals.slice(0, 100).map((hospital, index) => {
-          const latitude = parseFloat(hospital.latitude);
-          const longitude = parseFloat(hospital.longitude);
+        {pharmacies.slice(0, 100).map((pharmacy, index) => { // 변수명을 소문자로 수정
+          const latitude = parseFloat(pharmacy.latitude);
+          const longitude = parseFloat(pharmacy.longitude);
           if (!latitude || !longitude) {
-            console.error('Invalid lat or lng:', hospital);
+            console.error('Invalid lat or lng:', pharmacy);
             return null;
           }
 
           return (
             <Marker
-              key={hospital.hospitalID.toString()}
+              key={pharmacy.pharmacyID.toString()} // 속성 이름을 소문자로 수정 (가정)
               coordinate={{ latitude, longitude }}
-              title={hospital.name}
-              description={hospital.address}
+              title={pharmacy.name}
+              description={pharmacy.address}
             />
           );
         })}
@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HospitalMap;
+export default PharmacyMap;

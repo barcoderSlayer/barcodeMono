@@ -1,6 +1,8 @@
 // Contacting.js <문의하기 페이지>
 import React, { useState } from 'react';
+
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
@@ -10,14 +12,37 @@ const App = () => {
   const [text1Position, setText1Position] = useState({ top: 450, left: 20 }); // 접수된 문의 텍스트 위치 조정
   const [text2Position, setText2Position] = useState({ top: 495, left: 20 }); // 문의 처리 내역 텍스트 위치 조정
 
-
   const moveText1 = () => {
     setText1Position({ top: text1Position.top + 10, left: text1Position.left + 10 }); 
   }
 
-  const moveText2 = () => {
-    setText2Position({ top: text2Position.top + 10, left: text2Position.left + 10 });
+  const submitInquiry = async () => {
+    try {
+      const response = await fetch('http://your_backend_ip:3000/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: inquiryTitle,
+          content: inquiryContent,
+        }),
+      });
+
+
+      const data = await response.json();
+
+      if (data) {
+        console.log('문의가 성공적으로 저장되었습니다.');
+        navigation.goBack();
+      } else {
+        console.error('서버로부터 응답이 올바르지 않습니다.');
+      }
+    } catch (error) {
+      console.error('문의 저장 중 오류가 발생했습니다:', error);
+    }
   };
+
 
   const submitInquiry = async () => {
     try {
@@ -50,49 +75,51 @@ const App = () => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+
     <View style={styles.container}>
-      {/* Header or Navigation Bar */}
-      <View style={styles.header}> 
-        <TouchableOpacity style={styles.backButton}>
+
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>{"<"}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>                   문의하기</Text>
+        <Text style={styles.headerTitle}>문의하기</Text>
       </View>
 
-      {/* Content */}
+
+
       <View style={styles.content}>
-        {/* Menu */}
+
         <View style={styles.menu}>
         </View>
 
-        {/* Input Area */}
+
         <View style={styles.inputArea}>
           <Text style={styles.inputLabel}>제목</Text>
-          {/* <View style={styles.imageUploadBox}></View> */}
-                  {/* 새로운 텍스트 입력 필드 추가 */}
-          <TextInput 
-            style={styles.additionalTextInput} 
-            multiline 
-            numberOfLines={2} 
-            placeholder="제목을 입력하세요" 
-          />
 
-        <Text style={styles.inputLabel}>내용</Text>
-        <TextInput 
-          style={styles.textInput}
-          multiline 
-          numberOfLines={10}  
-          placeholder="내용을 입력하세요" 
-        />
+          <TextInput
+            style={styles.additionalTextInput}
+            value={inquiryTitle}
+            onChangeText={setInquiryTitle}
+            placeholder="제목을 입력하세요"
+          />
+          <Text style={styles.inputLabel}>내용</Text>
+          <TextInput
+            style={styles.textInput}
+            multiline
+            numberOfLines={4}
+            value={inquiryContent}
+            onChangeText={setInquiryContent}
+            placeholder="내용을 입력하세요"
+          />
       </View>
 
-        {/* Adjustable Text Components */}
-        < Text style={[styles.adjustableText, { top: text1Position.top, left: text1Position.left }]}>
-        -접수된 문의는 개발자가 확인 후 답변드리겠습니다. 상세한 내용을 기재해주시면 빨리 답변 드릴 수 있습니다.   
+        <Text style={[styles.adjustableText, { top: 550, left: 20 }]}>
+          -접수된 문의는 개발자가 확인 후 답변드리겠습니다. 상세한 내용을 기재해주시면 빨리 답변 드릴 수 있습니다.
         </Text>
-        <Text style={[styles.adjustableText, { top: text2Position.top, left: text2Position.left }]}>
-        -문의 처리 내역은 마이페이지 {'>'} 답변확인에서 확인하실 수 있습니다.
+        <Text style={[styles.adjustableText, { top: 600, left: 20 }]}>
+          -문의 처리 내역은 마이페이지 {'>'} 답변확인에서 확인하실 수 있습니다.
         </Text>
+
 
         {/* Footer or Action Area */}
         {/* // '확인' 버튼에 submitInquiry 함수 연결 */}
@@ -103,6 +130,7 @@ const App = () => {
         <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate("Home",{screen:'Home'})}>
           <Text style={styles.cancelButtonText}>취소</Text>
         </TouchableOpacity>
+
         </View>
       </View>
     </KeyboardAvoidingView>

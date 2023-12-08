@@ -1,11 +1,26 @@
+//DetailedCheck.js<답변을 넣을수 있는 문의하기 상세보기 페이지 >
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  Button,
+  StyleSheet,
+  Dimensions,
+  Alert
+} from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
 const DetailScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { inquiryId } = route.params;
+
 
   const [titleContent, setTitleContent] = useState('');
   const [inquiryContent, setInquiryContent] = useState('');
@@ -23,14 +38,36 @@ const DetailScreen = () => {
     setResponseTimestamp('2023-10-20T15:30:00Z');
   }, []);
 
-  // 타임스탬프 포맷
+  const [inquiryDetail, setInquiryDetail] = useState({
+    title: '',
+    content: '',
+    answer: '',
+    created_at: ''
+  });
+  const [newResponse, setNewResponse] = useState('');
+
+   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://your_backend_ip:3000/api/contact_answer/${inquiryId}`);
+        const data = await response.json();
+        if (response.ok) {
+          setInquiryDetail(data);
+        } else {
+          Alert.alert('Error', 'Unable to fetch inquiry details.');
+        }
+      } catch (error) {
+        console.error('Error fetching inquiry details:', error);
+        Alert.alert('Error', 'An error occurred while fetching inquiry details.');
+      }
+    };
+
+    fetchData();
+  }, [inquiryId]);
+
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
-    if (isNaN(date)) {
-      // Handle invalid date, perhaps return a default string or error message
-      return "Invalid date";
-    }
-    return new Intl.DateTimeFormat('ko-KR', {
+    return isNaN(date) ? "Invalid date" : new Intl.DateTimeFormat('ko-KR', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -40,12 +77,39 @@ const DetailScreen = () => {
     }).format(date);
   };
 
-
   const handleSubmit = () => {  
     // 답변 게시 처리 로직
     // 예시: 서버에 데이터를 보내는 로직을 여기에 추가
     alert('답변이 게시되었습니다.');
     // 필요한 경우 상태 업데이트 또는 네비게이션 조정
+
+  const handleSubmitResponse = async () => {
+    try {
+      const response = await fetch(`http://your_backend_ip:3000/api/contact_answer/${inquiryId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          answer: newResponse,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        Alert.alert('Success', 'Response submitted successfully.');
+        setInquiryDetail(prevState => ({
+          ...prevState,
+          answer: newResponse
+        }));
+        setNewResponse('');
+      } else {
+        Alert.alert('Error', 'Failed to submit response.');
+      }
+    } catch (error) {
+      console.error('Error submitting response:', error);
+      Alert.alert('Error', 'An error occurred while submitting your response.');
+    }
   };
 
   return (
@@ -56,15 +120,22 @@ const DetailScreen = () => {
           <Text>{titleContent}</Text>
         </View>
       </View>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Text style={styles.backButtonText}>{"<"}</Text>
+      </TouchableOpacity>
+      <Text style={styles.header}>상세 확인</Text>
       <View style={styles.contentContainer}>
+        <Text style={styles.title}>문의 제목</Text>
+        <Text>{inquiryDetail.title}</Text>
         <Text style={styles.title}>문의 내용</Text>
         <View style={styles.contentBox}>
-          <Text>{inquiryContent}</Text>
+          <Text>{inquiryDetail.content}</Text>
         </View>
-        <Text style={styles.timestamp}>{formatTimestamp(inquiryTimestamp)}</Text>
+        <Text style={styles.timestamp}>{formatTimestamp(inquiryDetail.created_at)}</Text>
       </View>
       <View style={styles.contentContainer}>
         <Text style={styles.title}>답변 내용</Text>
+
             <TextInput // 답변 내용 텍스트 입력
               style={styles.contentInput}
               multiline={true}  // 여러 줄 입력 가능
@@ -76,6 +147,21 @@ const DetailScreen = () => {
               <Text style={styles.buttonText}>완료</Text>
             </TouchableOpacity>
         <Text style={styles.timestamp}>{formatTimestamp(responseTimestamp)}</Text>
+        <View style={styles.contentBox}>
+          <Text>{inquiryDetail.answer}</Text>
+        </View>
+        {/* 기존 답변의 타임스탬프는 데이터에 따라 추가될 수 있음 */}
+      </View>
+      <View style={styles.contentContainer}>
+        <TextInput
+          style={styles.input}
+          value={newResponse}
+          onChangeText={setNewResponse}
+          placeholder="Enter your response here..."
+          multiline
+        />
+        <Button title="Submit Response" onPress={handleSubmitResponse} />
+
       </View>
     </ScrollView>
   );

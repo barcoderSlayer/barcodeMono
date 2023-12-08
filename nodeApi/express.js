@@ -6,14 +6,14 @@ const express = require("express");
 
 //controller에 요청
 const indexRouter = require('./routes/index');
+const appRouter = require('./routes/apiRouter')
 
 
 const app =express();
-
+//router
 app.use('/', indexRouter);
+// app.use('/api',appRouter); 어떻게 분할할지 정하기
 
 app.listen(3000,() => {
     console.log("server onload")
 });
-
-

@@ -31,5 +31,8 @@ yarn-error.*
 # local env files
 .env*.local
 
+# config.js 파일을 무시합니다.
+config.js
+
 # typescript
 *.tsbuildinfo

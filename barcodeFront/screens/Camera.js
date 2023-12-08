@@ -8,9 +8,9 @@
 
     export default function Camera(){
         
-        const [hasPermission, setHasPermission] = useState(null);
-        const [scanned, setScanned] = useState(false);
-        const navigation = useNavigation();
+        const [hasPermission, setHasPermission] = useState(null); // 카메라 접근 권한
+        const [scanned, setScanned] = useState(false); //스캔여부
+        const navigation = useNavigation(); 
         const isFocused = useIsFocused();
 
 
@@ -43,7 +43,6 @@
                 navigation.navigate("ProductInformationScreen", { barcodeData: data });
             }
 
-
                 //카메라 권한 요청 // 권한 확인
             };
             if (hasPermission === null) {
@@ -52,6 +51,41 @@
             if (hasPermission === false) {
                 return <Text>카메라 접근 권한이 없습니다.</Text>;
             }
+
+
+        // AsyncStorage에 바코드 데이터 저장
+        const saveBarcodeToStorage = async ()=>{
+            try{
+                // AsyncStorage에서 저장된 바코드 데이터 불러오기
+                const existingData = await AsyncStorage.getItem('productData');
+
+                //기존 데이터가 없을 경우
+                if(!existingData){
+                    const newData = [productData];
+                    await AsyncStorage.setItem('productData',JSON.stringify(newData));
+                }else{
+                    //기존 데이터가 있을경우
+                    
+                    const parsedData = JSON.parse(existingData);
+                    console.log("parsedData",parsedData);
+                    console.log("productData,",productData)
+
+                    // 중복된 데이터를 방지하기 위해 이미 존재하는지 확인
+                    if(!parsedData.includes(productData)){
+                        parsedData.push(productData);
+                        await AsyncStorage.setItem('productData', JSON.stringify(parsedData));
+                        console.log('데이터를 저장했습니다.',JSON.stringify(parsedData));
+                    }
+                }
+
+            }catch(error){
+                console.log("바코드 데이터 스토리지 저장 중 에러 ",error);
+            }
+        }
+
+
+
+
 
         return (
             <View style={styles.container}>
