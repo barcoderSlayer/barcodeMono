@@ -22,7 +22,7 @@ export default function BarcodeComponent(props) {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ProductInformationScreen',{ barcodeData: productData.barcodeNum })}
+      onPress={() => navigation.navigate('ProductInformationScreen',{ barcodeData: productData })}
       style={styles.roundedRectangle}
     >
       <View style={styles.imageContainer}>
@@ -35,7 +35,12 @@ export default function BarcodeComponent(props) {
       <View style={styles.textContainer}>
         <Text style={styles.topText}>{productData.barcodeNum}</Text>
         <Text style={styles.productName}>{productData.productNameKr}</Text>
-        <Text style={styles.rating}>120</Text>
+
+        {
+          productData.scanCnt &&
+          <Text style={styles.rating}>View : {productData.scanCnt}</Text>
+        }
+        
       </View>
     </TouchableOpacity>
   );

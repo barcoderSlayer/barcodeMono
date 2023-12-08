@@ -35,7 +35,7 @@ export default function Search({ navigation }) {
   const getProductList = async ()=> {
     try{
       const storedProductList = await AsyncStorage.getItem('productData');
-
+      console.log("storedProductList => =>",storedProductList)
       if(storedProductList){
         const parsedProductList = JSON.parse(storedProductList);
         setProductList(parsedProductList);

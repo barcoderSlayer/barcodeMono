@@ -58,10 +58,13 @@ export default function Ranking({ barcodeData, navigation }) {
     >
 
       <View style={styles.container}>
-        {rankings.map((item, index) => (
+        {rankings.map((item, index) => {
+          const data = item
+          return (
+
           <TouchableOpacity
             key={item.barcodeNum}
-            onPress={() => navigation.navigate('ProductInformationScreen', { barcodeData: item.barcodeNum })}
+            onPress={() => navigation.navigate('ProductInformationScreen', { barcodeData: data })}
             style={styles.roundedRectangle}
           >
             <View style={styles.imageContainer}>
@@ -87,11 +90,18 @@ export default function Ranking({ barcodeData, navigation }) {
                 <Icon name="crown" color="red" size={22} /> TOP{index + 1}
               </Text>
             )}
+            {index >2 && (
+              <Text style={styles.topText}>
+                TOP{index + 1}
+              </Text>
+            )}
               <Text style={styles.productName}>{item.productNameKr}</Text>
               <Text style={styles.count}>Veiw : {item.scanCnt}</Text>
             </View>
           </TouchableOpacity>
-        ))}
+          )
+        }
+        )}
       </View>
     </ScrollView>
   );
