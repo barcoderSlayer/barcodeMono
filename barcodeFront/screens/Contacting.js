@@ -29,34 +29,6 @@ const App = () => {
         }),
       });
 
-
-      const data = await response.json();
-
-      if (data) {
-        console.log('문의가 성공적으로 저장되었습니다.');
-        navigation.goBack();
-      } else {
-        console.error('서버로부터 응답이 올바르지 않습니다.');
-      }
-    } catch (error) {
-      console.error('문의 저장 중 오류가 발생했습니다:', error);
-    }
-  };
-
-
-  const submitInquiry = async () => {
-    try {
-      const response = await fetch('http://your_backend_ip:3000/api/inquiries', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: inquiryTitle,
-          content: inquiryContent,
-        }),
-      });
-
       const data = await response.json();
 
       if (data) {

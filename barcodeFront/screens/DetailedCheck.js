@@ -16,7 +16,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 
-const DetailScreen = () => {
+
+export default function DetailScreen ()  {
   const navigation = useNavigation();
   const route = useRoute();
   const { inquiryId } = route.params;
@@ -77,11 +78,7 @@ const DetailScreen = () => {
     }).format(date);
   };
 
-  const handleSubmit = () => {  
-    // 답변 게시 처리 로직
-    // 예시: 서버에 데이터를 보내는 로직을 여기에 추가
-    alert('답변이 게시되었습니다.');
-    // 필요한 경우 상태 업데이트 또는 네비게이션 조정
+
 
   const handleSubmitResponse = async () => {
     try {
@@ -143,9 +140,6 @@ const DetailScreen = () => {
               value={responseContent}
               placeholder="답변을 입력하세요"
             />
-            <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-              <Text style={styles.buttonText}>완료</Text>
-            </TouchableOpacity>
         <Text style={styles.timestamp}>{formatTimestamp(responseTimestamp)}</Text>
         <View style={styles.contentBox}>
           <Text>{inquiryDetail.answer}</Text>
@@ -241,4 +235,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetailScreen;

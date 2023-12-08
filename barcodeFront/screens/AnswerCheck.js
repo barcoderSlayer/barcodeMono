@@ -86,15 +86,15 @@ import { useNavigation } from '@react-navigation/native';
     </>
   );
 
-    <View style={styles.container}>
-      {/* FlatList 컴포넌트를 사용하여 문의글 목록을 렌더링합니다. */}
-      <FlatList
-        data={inquiries} // 렌더링할 데이터 배열입니다.
-        renderItem={renderItem} // 각 항목을 어떻게 렌더링할지 정의합니다.
-        keyExtractor={item => item.id.toString()} // 각 항목의 고유 키를 추출하는 함수입니다.
-      />
-    </View>
-   );
+  //   <View style={styles.container}>
+  //     {/* FlatList 컴포넌트를 사용하여 문의글 목록을 렌더링합니다. */}
+  //     <FlatList
+  //       data={inquiries} // 렌더링할 데이터 배열입니다.
+  //       renderItem={renderItem} // 각 항목을 어떻게 렌더링할지 정의합니다.
+  //       keyExtractor={item => item.id.toString()} // 각 항목의 고유 키를 추출하는 함수입니다.
+  //     />
+  //   </View>
+  //  );
 
 };
 

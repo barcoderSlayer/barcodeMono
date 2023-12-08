@@ -6,7 +6,7 @@ const express = require("express");
 
 //controller에 요청
 const indexRouter = require('./routes/index');
-const appRouter = require('./routes/apiRouter')
+// const appRouter = require('./routes/apiRouter')
 
 
 const app =express();
