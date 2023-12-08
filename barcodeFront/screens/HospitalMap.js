@@ -24,10 +24,16 @@ const HospitalMap = () => {
         longitudeDelta: 0.0421,
       });
 
-      fetch(`http://172.30.1.42:4000/api/hospitals?lat=${location.coords.latitude}&lng=${location.coords.longitude}`)
+      fetch('http://172.30.1.39:4000/api/hospitals')
         .then(response => response.json())
-        .then(data => setHospitals(data))
-        .catch(error => console.error(error));
+        .then(data => {
+          console.log('Hospitals data:', data);
+          setHospitals(data);
+        })
+        .catch(error => {
+          console.error('Error fetching hospitals:', error);
+          setErrorMsg('Error fetching hospitals');
+        });
     })();
   }, []);
 
@@ -43,20 +49,26 @@ const HospitalMap = () => {
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        region={currentRegion}
+        initialRegion={currentRegion}
         showsUserLocation={true}
-        followsUserLocation={true}
       >
-        {hospitals.map(hospital => (
-          <Marker
-            key={hospital.id}
-            coordinate={{
-              latitude: parseFloat(hospital.latitude),
-              longitude: parseFloat(hospital.longitude),
-            }}
-            title={hospital.name}
-          />
-        ))}
+        {hospitals.slice(0, 100).map((hospital, index) => {
+          const latitude = parseFloat(hospital.latitude);
+          const longitude = parseFloat(hospital.longitude);
+          if (!latitude || !longitude) {
+            console.error('Invalid lat or lng:', hospital);
+            return null;
+          }
+
+          return (
+            <Marker
+              key={hospital.hospitalID.toString()}
+              coordinate={{ latitude, longitude }}
+              title={hospital.name}
+              description={hospital.address}
+            />
+          );
+        })}
       </MapView>
     </View>
   );
