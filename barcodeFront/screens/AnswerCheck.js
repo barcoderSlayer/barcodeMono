@@ -44,6 +44,48 @@ import { useNavigation } from '@react-navigation/native';
 
   // 실제로 화면에 표시될 내용입니다.
   return (
+    <>
+    <View style={styles.header}>
+      {/* <Text style={styles.headerText}>답변확인</Text> */}
+    </View>
+    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Text style={styles.backButtonText}>{"<"}</Text>
+      </TouchableOpacity>
+    <View style={[styles.container, { paddingTop: headerHeight }]}>
+      <View style={styles.form}>
+          <View style={styles.inputGroup}>
+          </View>
+
+           {/* Image component */}
+           <Image
+            style={styles.stretch1}
+            source={require('../assets/image/question.png')}  // 물음표 이미지
+          />
+            {/* Image component */}
+            <Image
+            style={styles.stretch2}
+            source={require('../assets/image/danger.png')}  // 느낌표 이미지
+          />
+
+          <Text style={styles.question}>
+            문의 내역
+          </Text>
+          <Text style={styles.danger}>
+            답변 내용
+          </Text>
+
+          <TouchableOpacity style={styles.buttonQuestion} onPress={() => navigation.navigate("DetailedCheck",{screen:'DetailedCheck'})}>
+            <Text style={styles.interactiveButtonText}>상세확인</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.buttonDanger} onPress={() => navigation.navigate("DetailedCheck",{screen:'DetailedCheck'})}>
+            <Text style={styles.interactiveButtonText}>상세확인</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </>
+  );
+
     <View style={styles.container}>
       {/* FlatList 컴포넌트를 사용하여 문의글 목록을 렌더링합니다. */}
       <FlatList
@@ -53,6 +95,7 @@ import { useNavigation } from '@react-navigation/native';
       />
     </View>
    );
+
 };
 
 
@@ -95,7 +138,7 @@ const styles = StyleSheet.create({
   inputGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 30,
+    marginBottom: 70,
     bottom: 50,
   },
   label: {
@@ -156,7 +199,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 0,
     marginBottom: 20,
-    bottom: 106,
+
+    bottom: 100,
     left: 20, 
   },
 

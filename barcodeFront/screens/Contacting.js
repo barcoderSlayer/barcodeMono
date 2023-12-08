@@ -1,12 +1,48 @@
 // Contacting.js <문의하기 페이지>
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 const App = () => {
   const navigation = useNavigation();
   const [inquiryTitle, setInquiryTitle] = useState('');
   const [inquiryContent, setInquiryContent] = useState('');
+  const [text1Position, setText1Position] = useState({ top: 450, left: 20 }); // 접수된 문의 텍스트 위치 조정
+  const [text2Position, setText2Position] = useState({ top: 495, left: 20 }); // 문의 처리 내역 텍스트 위치 조정
+
+  const moveText1 = () => {
+    setText1Position({ top: text1Position.top + 10, left: text1Position.left + 10 }); 
+  }
+
+  const submitInquiry = async () => {
+    try {
+      const response = await fetch('http://your_backend_ip:3000/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: inquiryTitle,
+          content: inquiryContent,
+        }),
+      });
+
+
+      const data = await response.json();
+
+      if (data) {
+        console.log('문의가 성공적으로 저장되었습니다.');
+        navigation.goBack();
+      } else {
+        console.error('서버로부터 응답이 올바르지 않습니다.');
+      }
+    } catch (error) {
+      console.error('문의 저장 중 오류가 발생했습니다:', error);
+    }
+  };
+
 
   const submitInquiry = async () => {
     try {
@@ -35,6 +71,10 @@ const App = () => {
   };
 
   return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
 
     <View style={styles.container}>
 
@@ -50,17 +90,14 @@ const App = () => {
       <View style={styles.content}>
 
         <View style={styles.menu}>
-          <TouchableOpacity style={styles.menuButton}><Text>문의</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.menuButton}><Text>수정 요청</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.menuButton}><Text>오류/에러</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.menuButton}><Text>기타</Text></TouchableOpacity>
         </View>
 
 
         <View style={styles.inputArea}>
           <Text style={styles.inputLabel}>제목</Text>
+
           <TextInput
-            style={styles.textInput}
+            style={styles.additionalTextInput}
             value={inquiryTitle}
             onChangeText={setInquiryTitle}
             placeholder="제목을 입력하세요"
@@ -74,7 +111,7 @@ const App = () => {
             onChangeText={setInquiryContent}
             placeholder="내용을 입력하세요"
           />
-        </View>
+      </View>
 
         <Text style={[styles.adjustableText, { top: 550, left: 20 }]}>
           -접수된 문의는 개발자가 확인 후 답변드리겠습니다. 상세한 내용을 기재해주시면 빨리 답변 드릴 수 있습니다.
@@ -84,16 +121,19 @@ const App = () => {
         </Text>
 
 
-        <View style={styles.footer}>
-          <TouchableOpacity style={styles.submitButton} onPress={submitInquiry}>
-            <Text style={styles.submitButtonText}>확인</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate("Home", { screen: 'Home' })}>
-            <Text style={styles.cancelButtonText}>취소</Text>
-          </TouchableOpacity>
+        {/* Footer or Action Area */}
+        {/* // '확인' 버튼에 submitInquiry 함수 연결 */}
+        <TouchableOpacity style={styles.submitButton} onPress={submitInquiry}>
+          <Text style={styles.submitButtonText}>확인</Text>
+        </TouchableOpacity>
+        {/* Cancel Button */}
+        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate("Home",{screen:'Home'})}>
+          <Text style={styles.cancelButtonText}>취소</Text>
+        </TouchableOpacity>
+
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -107,7 +147,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#7B6F72',
   },
- 
   backButton: { // 뒤로 가기 버튼 
     marginRight: 16,
     justifyContent: 'center',
@@ -134,38 +173,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: 24,
   },
-  menuButton: {   // 문의, 수정 요청, 오류/에러, 기타 버튼
-    padding: 8,
-    backgroundColor: '#ddd',
-    borderRadius: 4,
-    // 크기 조절이 가능하도록 너비와 높이를 추가하세요.
-    width: 80, // 넓이 조절 가능
-    height: 60, // 높이 조절 가능
-    // 유용성 보장
-    minWidth: 30,
-    minHeight: 20,
-    justifyContent: 'center', // 텍스트 세로 가운데 배치
-    alignItems: 'center', // 텍스트 가로 가운데 배치
-  },
-  inputArea: {
+  inputArea: {  // 제목, 제목입력, 내용, 내용입력 위치 조정
     flex: 1,
+    bottom: 80,
   },
-  imageUploadBox: { // 사진 업로드
-    width: '30%',
-    height: 100,
-    borderWidth: 1,
-    borderColor: '#000',
-    borderStyle: 'dashed',
-    borderRadius: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
+  additionalTextInput: {  // 제목 텍스트 박스
+    borderWidth: 2,
+    borderColor: '#ddd',
+    padding: 8,
+    textAlignVertical: 'top',
+    marginBottom: 30,   // 내용 텍스트와의 거리
   },
   inputLabel: { 
-    marginBottom: 8,
+    marginBottom: 20,
+    fontSize: 20,
     fontWeight: 'bold',
   },
-  textInput: {   // 텍스트 박스
+  textInput: {   // 내용 텍스트 박스
     borderWidth: 2,
     borderColor: '#ddd',
     padding: 16,
@@ -175,7 +199,7 @@ const styles = StyleSheet.create({
     top: 180, 
     left: 0, 
     right: 0, 
-    bottom: 100, 
+    bottom: 50, 
   },
   footer: {
     padding: 16,
@@ -184,12 +208,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ADA4A5',
     position: 'absolute', 
     padding: 20,
-    width: 200, 
+    width: 193, 
     height: 61, 
     borderRadius: 0,
     alignItems: 'center',
-    top: 0, 
-    left: 180, 
+    bottom: 0, 
+    left: 192, 
   },
   submitButtonText: { // 확인 텍스트
     fontSize: 16,
@@ -201,12 +225,12 @@ const styles = StyleSheet.create({
     marginTop: 10, 
     backgroundColor: '#E4E4E4', 
     position: 'absolute', 
-    width: 200, 
+    width: 193, 
     height: 61, 
     borderRadius: 0,
     alignItems: 'center',
-    bottom: -16,
-    right: 172, 
+    bottom: 0,
+    right: 192, 
   },
   cancelButtonText: { // 취소 텍스트
     fontSize: 16,
@@ -215,7 +239,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     bottom: -20,
   },
-  footer: {
+  footer: {   // 취소 버튼 위치 조종
     // ... other footer styles ...
     position: 'relative', // 절대 위치 지정 필요
     height: 45, // 절대 위치에 있는 버튼을 위한 공간이 확보되도록 고정 높이를 설정하세요.
