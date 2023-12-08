@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, TouchableOpacity, Image, Text, StyleSheet, View ,RefreshControl } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
+//아이콘
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
 import config from '../config';
 
 export default function Ranking({ barcodeData, navigation }) {
@@ -69,9 +72,23 @@ export default function Ranking({ barcodeData, navigation }) {
             }
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.topText}>TOP{index + 1}</Text>
+            {index === 0 && (
+              <Text style={styles.topText}>
+                <Icon name="crown" color="gold" size={22} /> TOP{index + 1}
+              </Text>
+            )}
+            {index === 1 && (
+              <Text style={styles.topText}>
+                <Icon name="crown" color="silver" size={22} /> TOP{index + 1}
+              </Text>
+            )}
+            {index ===2 && (
+              <Text style={styles.topText}>
+                <Icon name="crown" color="red" size={22} /> TOP{index + 1}
+              </Text>
+            )}
               <Text style={styles.productName}>{item.productNameKr}</Text>
-              <Text style={styles.count}>{item.scanCnt}</Text>
+              <Text style={styles.count}>Veiw : {item.scanCnt}</Text>
             </View>
           </TouchableOpacity>
         ))}
