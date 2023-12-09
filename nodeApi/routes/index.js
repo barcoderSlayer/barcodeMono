@@ -91,10 +91,12 @@ router.get('/barcodePage/', async(req,res) => {
             barcodeData[0].scanCnt = dbData.scanCnt;
             barcodeData[0].imageUrl = dbData.imageUrl;
             barcodeData[0].division = dbData.division;
+
+            increaseScanCount(barcodeNumData);
         }
 
         //만약 productNameKr 이 null 이라면
-        if(barcodeData[0].productNameKr == null){
+        if(barcodeData[0].productNameKr == null){               
             console.log("한글 상품 이름이 없습니다.");
             const crowlName = await getProductNameKr(barcodeNumData);
             console.log("한글 상품 크롤링해서 받은 이름",crowlName)
@@ -277,6 +279,28 @@ router.post('/chat', async(req, res) => {
 // }
 
 
+// 바코드 조회 시 scanCnt 1 증가 함수
+async function increaseScanCount(barcodeNum) {
+    const updateScanCountSql = `UPDATE products SET scanCnt = scanCnt + 1 WHERE barcodeNum = '${barcodeNum}'`;
+
+    try {
+        const result = await new Promise((resolve, reject) => {
+            db.query(updateScanCountSql, (err, result) => {
+                if (err) {
+                    console.error(err);
+                    reject('바코드 조회 시 scanCnt 증가 중 에러 발생');
+                } else {
+                    console.log("바코드 조회 시 scanCnt를 1 증가했습니다.", result);
+                    resolve(result);
+                }
+            });
+        });
+        return result;
+    } catch (error) {
+        throw error; // 호출하는 곳에서 에러 처리
+    }
+}
+
 //사이트 서버에서 이미지 소스 크롤링
 async function getImgUrl(barcodeNumData){
     let imageUrl = null;
@@ -343,7 +367,7 @@ async function getProductNameKr(barcodeNumData){
 //예외처리를 해줘야할까? 데이터가 없다면 추가하는 코드인데
 async function addBarcodeNumData(barcodeNum){
     console.log("데이터 베이스에... ",barcodeNum," ...데이터를 추가합니다")
-    const insertSql = `Insert into products (barcodeNum) values ('${barcodeNum}')`
+    const insertSql = `Insert into products (barcodeNum,scanCnt) values ('${barcodeNum}',1)`
 
     try{
         const result = new Promise((resolve, reject) =>{
@@ -421,6 +445,9 @@ router.get('/api/rankings', async (req, res) => {
     }
 });
 module.exports = router;
+
+
+
 
 
 
