@@ -56,10 +56,10 @@ export default function ProductScan() {
 
   // 최근 스캔 기록 정보
   const productData = {
-    imageUrl: '이미지 주소',  // 스캔한 바코드 상품 이미지로 불어오기 필요
-    date: '2018. 3. 17.',
-    productName: '불닭볶음면',
-    barcode: '8801416812490',
+    imageUrl: 'https://beep-images.bgpworks.com/36488839-b82f-4b2a-975a-0047ca7b8b9a',  // 스캔한 바코드 상품 이미지로 불어오기 필요
+    date: '2023. 12. 09.',
+    productName: '핫식스',
+    barcode: '8801056038861',
   };
 
   return (

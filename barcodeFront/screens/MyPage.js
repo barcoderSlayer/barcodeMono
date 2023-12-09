@@ -57,9 +57,9 @@ export default function MyPage({ route }) {
           <Text style={[styles.Detail_menuItemText, { top: 210, left: 90 }]}>바코드 기록</Text>
         </TouchableOpacity>  
 
-        <TouchableOpacity style={styles.Barcoderecord_menuItem} onPress={() => clearAsyncStorage}>
+        {/* <TouchableOpacity style={styles.Barcoderecord_menuItem} onPress={() => clearAsyncStorage}>
           <Text style={[styles.Detail_menuItemText, { top: 300, left: 90 }]}>스토리지 기록 날리기</Text>
-        </TouchableOpacity>  
+        </TouchableOpacity>   */}
       
       </View>
     </View>
