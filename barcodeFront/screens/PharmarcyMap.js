@@ -24,10 +24,16 @@ const PharmacyMap = () => {
         longitudeDelta: 0.0421,
       });
 
-      fetch(`http://172.30.1.39:4001/api/pharmacies?lat=${location.coords.latitude}&lng=${location.coords.longitude}`)
+      fetch(`${config.LOCALHOST_IP}/api/pharmacies`)
         .then(response => response.json())
-        .then(data => setPharmacies(data))
-        .catch(error => console.error(error));
+        .then(data => {
+          console.log('Pharmacies data:', data);
+          setPharmacies(data); // 함수명을 올바르게 수정
+        })
+        .catch(error => {
+          console.error('Error fetching pharmacies:', error);
+          setErrorMsg('Error fetching pharmacies');
+        });
     })();
   }, []);
 
@@ -43,20 +49,26 @@ const PharmacyMap = () => {
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        region={currentRegion}
+        initialRegion={currentRegion}
         showsUserLocation={true}
-        followsUserLocation={true}
       >
-        {pharmacies.map(pharmacy => (
-          <Marker
-            key={pharmacy.id}
-            coordinate={{
-              latitude: parseFloat(pharmacy.latitude),
-              longitude: parseFloat(pharmacy.longitude),
-            }}
-            title={pharmacy.name}
-          />
-        ))}
+        {pharmacies.slice(0, 100).map((pharmacy, index) => { // 변수명을 소문자로 수정
+          const latitude = parseFloat(pharmacy.latitude);
+          const longitude = parseFloat(pharmacy.longitude);
+          if (!latitude || !longitude) {
+            console.error('Invalid lat or lng:', pharmacy);
+            return null;
+          }
+
+          return (
+            <Marker
+              key={pharmacy.pharmacyID.toString()} // 속성 이름을 소문자로 수정 (가정)
+              coordinate={{ latitude, longitude }}
+              title={pharmacy.name}
+              description={pharmacy.address}
+            />
+          );
+        })}
       </MapView>
     </View>
   );
