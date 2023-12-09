@@ -2,12 +2,12 @@ const mariadb = require('mariadb');
 const fs = require('fs');
 
 const pool = mariadb.createPool({
-    host: '127.0.0.1', 
-    user: 'root', 
-    password: 'qkrtjdgh123!',
-    database: 'mydatabase'
+    host: '호스트', 
+    user: '유저', 
+    password: '비번',
+    database: 'barcoder'
 });
-
+Z
 async function insertData() {
     let conn;
     try {
@@ -18,8 +18,8 @@ async function insertData() {
         
        // 데이터 삽입
 for (let item of data) {
-    await conn.query('INSERT INTO pharmacy (Name, PhoneNumber, Latitude, Longitude, Address, Codename) VALUES (?, ?, ?, ?, ?, ?)', [
-        item.요양기관명, item.전화번호, item.위도, item.경도, item.주소, item.종별코드명
+    await conn.query('INSERT INTO pharmacies (name, phoneNumber, latitude, longitude, address, codename) VALUES (?, ?, ?, ?, ?, ?)', [
+        item.요양기관명, item.전화번호, item.경도, item.위도, item.주소, item.종별코드명
     ]);
 }
 
@@ -30,4 +30,4 @@ for (let item of data) {
     }
 }
 
-insertpharmacyData();
+insertData();
