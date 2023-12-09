@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Image, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useIsFocused } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const { width } = Dimensions.get('window');
 
 export default function ProductScan() {
-
+ 
   const navigation = useNavigation();
-
-  // 상품 스캔 데이터 상태
-  const [scannedProducts, setScannedProducts] = useState([]);
+  const [recentScan, setRecentScan] = useState(null);
 
   useEffect(() => {
-    // AsyncStorage에서 상품 기록 데이터를 불러오는 함수
+ 
     const fetchScannedProducts = async () => {
       try {
-        const savedProducts = await AsyncStorage.getItem('scannedProducts');
-        setScannedProducts(savedProducts ? JSON.parse(savedProducts) : []);
+        const savedProductsJSON = await AsyncStorage.getItem('scannedProducts');
+        const savedProducts = savedProductsJSON ? JSON.parse(savedProductsJSON) : [];
+        if (savedProducts.length > 0) {
+          setRecentScan(savedProducts[savedProducts.length - 1]);
+        }
       } catch (e) {
         console.error('Failed to load data', e);
       }
@@ -27,13 +27,13 @@ export default function ProductScan() {
     fetchScannedProducts();
   }, []);
 
-   // 카메라 모드로 이동하는 함수 (현재는 예시로 로그만 출력)
-   const handleCameraMode = () => {
-    console.log('카메라 페이지로 이동');
-    // 카메라 페이지 이동
+
+  const handleCameraMode = () => {
+ 
     navigation.navigate("CameraScreen");
-    
+ 
   };
+
 
     // AsyncStorage productData모든 데이터 비우기
     const clearAsyncStorage = async () => {
@@ -53,7 +53,6 @@ export default function ProductScan() {
 
 
 
-
   // 최근 스캔 기록 정보
   const productData = {
     imageUrl: '이미지 주소',  // 스캔한 바코드 상품 이미지로 불어오기 필요
@@ -62,33 +61,36 @@ export default function ProductScan() {
     barcode: '8801416812490',
   };
 
+
+ 
   return (
     <View style={styles.container}>
+  
       <Text style={styles.recentSearchTitle}>최근 검색 기록</Text>
-      {/* 카메라 모드로 이동 버튼 */}
+  
       <TouchableOpacity style={styles.cameraButton} onPress={handleCameraMode}>
         <Image
-          source={require('../assets/image/camera.png')} // 이미지 파일 경로
+          source={require('../assets/image/camera.png')}
           style={styles.cameraIcon}
         />
         <Text style={styles.cameraButtonText}>카메라 모드로 이동</Text>
+  
       </TouchableOpacity>
 
-    
-
-      {/* 상품 정보 카드 */}
-      <View style={styles.productCard}>
-        <Image source={{ uri: productData.imageUrl }} style={styles.productImage} />
-        <View style={styles.productDetails}>
-          <Text style={styles.productDate}>{productData.date}</Text>
-          <Text style={styles.productName}>{productData.productName}</Text>
-          <Text style={styles.barcode}>{productData.barcode}</Text>
+      {recentScan && (
+        <View style={styles.productCard}>
+          <Image source={{ uri: recentScan.imageUrl }} style={styles.productImage} />
+          <View style={styles.productDetails}>
+            <Text style={styles.productDate}>{recentScan.date}</Text>
+            <Text style={styles.productName}>{recentScan.productName || '제품명 미정'}</Text>
+            <Text style={styles.barcode}>{recentScan.barcode}</Text>
+          </View>
         </View>
       </View>
       {/* <Button title='스토리지 삭제' onPress={clearAsyncStorage}></Button> */}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({  container: {
     flex: 1,
