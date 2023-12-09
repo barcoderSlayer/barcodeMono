@@ -86,8 +86,8 @@ export default function ProductScan() {
             <Text style={styles.barcode}>{recentScan.barcode}</Text>
           </View>
         </View>
-      )}
-
+      </View>
+      {/* <Button title='스토리지 삭제' onPress={clearAsyncStorage}></Button> */}
     </View>
   );
 }

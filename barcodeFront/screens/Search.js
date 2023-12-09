@@ -21,14 +21,17 @@ export default function Search({ navigation }) {
     console.log("Search 페이지로 들어오셨습니다.")
 
     console.log("스토리지 확인하겠습니다.")
+    
     getProductList();
+
+
   },[isFoucused])
 
   //확인용
   useEffect(() => {
     console.log("productList State가 채워졌습니다.");
     
-    console.log(productList);
+    // console.log(productList);
   },[productList])
 
   // AsyncStorage에서 바코드 리스트 가져오기
@@ -36,10 +39,12 @@ export default function Search({ navigation }) {
     try{
       const storedProductList = await AsyncStorage.getItem('productData');
       console.log("storedProductList => =>",storedProductList)
+
       if(storedProductList){
         const parsedProductList = JSON.parse(storedProductList);
-        setProductList(parsedProductList);
-        console.log(parsedProductList);
+        const reverseList = parsedProductList.reverse(); // 최신순으로 변환
+        setProductList(reverseList);
+        console.log('뒤집', parsedProductList);
       }else{
         console.log("스토리지에 바코드 데이터가 없습니다.");
       }
