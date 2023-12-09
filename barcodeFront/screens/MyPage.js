@@ -6,6 +6,20 @@ export default function MyPage({ route }) {
   const navigation = useNavigation();  // 추가
 
 
+
+    // AsyncStorage productData모든 데이터 비우기
+    const clearAsyncStorage = async () => {
+      try {
+        // AsyncStorage에서 바코드 데이터 삭제
+        await AsyncStorage.removeItem('productData');
+        // 바코드 리스트 상태 초기화
+        setProductList([]);
+        console.log("AsyncStorage가 성공적으로 비워졌습니다.");
+      } catch (error) {
+        console.error("AsyncStorage를 비우는 중 에러 발생:", error);
+      }
+    };
+
   return (
     <View style={styles.container}>
       {/* Header with "My Page" text */}
@@ -41,6 +55,10 @@ export default function MyPage({ route }) {
         </TouchableOpacity>
         <TouchableOpacity style={styles.Barcoderecord_menuItem} onPress={() => navigation.navigate("Search",{screen:'Search'})}>
           <Text style={[styles.Detail_menuItemText, { top: 210, left: 90 }]}>바코드 기록</Text>
+        </TouchableOpacity>  
+
+        <TouchableOpacity style={styles.Barcoderecord_menuItem} onPress={() => clearAsyncStorage}>
+          <Text style={[styles.Detail_menuItemText, { top: 300, left: 90 }]}>스토리지 기록 날리기</Text>
         </TouchableOpacity>  
       
       </View>

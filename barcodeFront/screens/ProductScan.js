@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Image, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 
@@ -35,6 +35,33 @@ export default function ProductScan() {
   };
 
 
+    // AsyncStorage productData모든 데이터 비우기
+    const clearAsyncStorage = async () => {
+      try {
+        // AsyncStorage에서 바코드 데이터 삭제
+        await AsyncStorage.removeItem('productData');
+        // 바코드 리스트 상태 초기화
+        // setProductList([]);
+        console.log("AsyncStorage가 성공적으로 비워졌습니다.");
+      } catch (error) {
+        console.error("AsyncStorage를 비우는 중 에러 발생:", error);
+      }
+    };
+
+
+
+
+
+
+  // 최근 스캔 기록 정보
+  const productData = {
+    imageUrl: '이미지 주소',  // 스캔한 바코드 상품 이미지로 불어오기 필요
+    date: '2018. 3. 17.',
+    productName: '불닭볶음면',
+    barcode: '8801416812490',
+  };
+
+
  
   return (
     <View style={styles.container}>
@@ -60,6 +87,7 @@ export default function ProductScan() {
           </View>
         </View>
       )}
+
     </View>
   );
 }

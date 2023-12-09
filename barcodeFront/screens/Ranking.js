@@ -1,48 +1,107 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, TouchableOpacity, Image, Text, StyleSheet, View } from 'react-native';
+import { ScrollView, TouchableOpacity, Image, Text, StyleSheet, View ,RefreshControl } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
+//아이콘
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
 import config from '../config';
 
 export default function Ranking({ barcodeData, navigation }) {
   const [rankings, setRankings] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+
 
   useEffect(() => {
-    const fetchRankings = async () => {
-      try {
-        const response = await axios.get(`${config.LOCALHOST_IP}/api/rankings`);
-        console.log('Server Response:', response.data);
-        setRankings(response.data);
-      } catch (error) {
-        console.error('Rankings fetching error:', error);
-      }
-    };
-
     fetchRankings();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchRankings();
+    setRefreshing(false);
+  };
+
+  
+  const fetchRankings = async () => {
+    try {
+      const response = await axios.get(`${config.LOCALHOST_IP}/api/rankings`);
+      console.log('Rankings get () => Server Response:', response.data);
+      setRankings(response.data);
+    } catch (error) {
+      console.error('Rankings fetching error:', error);
+    }
+  };
+
+  const handleScroll = (event) => {
+    const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+
+    // 스크롤이 최상단에서 일정 거리 이상 올라가면 새로고침
+    const distanceToTop = contentOffset.y;
+    const refreshDistance = -50; // 적절한 값을 설정해주세요
+
+    if (distanceToTop <= refreshDistance) {
+      fetchRankings();
+    }
+  };
+
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
+
       <View style={styles.container}>
-        {rankings.map((item, index) => (
+        {rankings.map((item, index) => {
+          const data = item
+          return (
+
           <TouchableOpacity
             key={item.barcodeNum}
-            onPress={() => navigation.navigate('ProductInformationScreen', { barcodeData: item.barcodeNum })}
+            onPress={() => navigation.navigate('ProductInformationScreen', { barcodeData: data })}
             style={styles.roundedRectangle}
           >
             <View style={styles.imageContainer}>
-              <Image  
-                source={require('../assets/icon.png')} // 실제 이미지 경로에 맞게 수정하세요
-                style={styles.imageStyle}
-              />
+            {
+              item.imageUrl ?
+              <Image style={styles.imageStyle} resizeMode='contain' source={{uri:item.imageUrl}}/> :
+              <Image style={styles.imageStyle} resizeMode='contain' source={require('../assets/imgless.jpeg')}/>
+            }
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.topText}>TOP{index + 1}</Text>
+            {index === 0 && (
+              <Text style={styles.topText}>
+                <Icon name="crown" color="gold" size={22} /> TOP{index + 1}
+              </Text>
+            )}
+            {index === 1 && (
+              <Text style={styles.topText}>
+                <Icon name="crown" color="silver" size={22} /> TOP{index + 1}
+              </Text>
+            )}
+            {index ===2 && (
+              <Text style={styles.topText}>
+                <Icon name="crown" color="red" size={22} /> TOP{index + 1}
+              </Text>
+            )}
+            {index >2 && (
+              <Text style={styles.topText}>
+                TOP{index + 1}
+              </Text>
+            )}
               <Text style={styles.productName}>{item.productNameKr}</Text>
-              <Text style={styles.count}>{item.scanCnt}</Text>
+              <Text style={styles.count}>Veiw : {item.scanCnt}</Text>
             </View>
           </TouchableOpacity>
-        ))}
+          )
+        }
+        )}
       </View>
     </ScrollView>
   );
