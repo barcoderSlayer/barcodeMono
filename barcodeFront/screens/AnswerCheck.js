@@ -1,90 +1,77 @@
 // AnswerCheck.js<어떤 문의가 있는지 확인할 수 있는 페이지 >
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-  
- const App = () => {
-  // useNavigation 훅을 사용하여 네비게이션 객체에 접근합니다.
- 
-   const navigation = useNavigation();
- 
-   
-  // 문의글 목록을 상태(state)로 관리하기 위한 useState 훅입니다.
-  const [inquiries, setInquiries] = useState([]);
+import config from '../config'; // config 파일의 정확한 경로를 지정하세요.
 
-  // useEffect 훅을 사용하여 컴포넌트가 마운트될 때(화면에 처음 표시될 때) 문의글 목록을 서버로부터 가져옵니다.
+const App = () => {
+ const navigation = useNavigation();
+ 
+ 
+ const [inquiries, setInquiries] = useState([]);
+
+
   useEffect(() => {
     const fetchInquiries = async () => {
       try {
-        // 서버로부터 문의글 목록을 가져오는 HTTP GET 요청을 비동기적으로 실행합니다.
-        const response = await fetch('http://your_backend_ip:3000/api/inquiries');
-        const data = await response.json(); // 응답으로 받은 데이터를 JSON 형태로 변환합니다.
-        setInquiries(data); // 변환된 데이터를 inquiries 상태에 저장합니다.
+        const response = await fetch(`${config.LOCALHOST_IP}/api/inquiries`);
+        const data = await response.json();
+        setInquiries(data);
       } catch (error) {
-        // 요청 중 오류가 발생하면 콘솔에 오류를 출력합니다.
+   
         console.error('Error fetching inquiries:', error);
       }
     };
 
-    fetchInquiries(); // 정의된 함수를 실행하여 데이터를 가져옵니다.
+    fetchInquiries();
   }, []);
 
-  // renderItem 함수는 FlatList에 의해 렌더링 될 각 문의글 항목을 정의합니다.
+  
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.inquiryItem}
-      // 각 항목을 클릭했을 때 'DetailedCheck' 스크린으로 네비게이션하며, inquiryId를 파라미터로 전달합니다.
+  
       onPress={() => navigation.navigate('DetailedCheck', { inquiryId: item.id })}
     >
       <Text style={styles.inquiryTitle}>{item.title}</Text>
-      {/* 문의글의 제목을 표시합니다. */}
+ 
     </TouchableOpacity>
   );
 
-  // 실제로 화면에 표시될 내용입니다.
+
   return (
     <>
-    <View style={styles.header}>
-      {/* <Text style={styles.headerText}>답변확인</Text> */}
-    </View>
-    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      <View style={styles.header}>
+        {/* Header 내용이 필요하다면 여기에 작성하세요. */}
+      </View>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>{"<"}</Text>
       </TouchableOpacity>
-    <View style={[styles.container, { paddingTop: headerHeight }]}>
-      <View style={styles.form}>
-          <View style={styles.inputGroup}>
-          </View>
-
-           {/* Image component */}
-           <Image
+      <View style={styles.container}>
+        <View style={styles.form}>
+          <Image
             style={styles.stretch1}
-            source={require('../assets/image/question.png')}  // 물음표 이미지
-          />
-            {/* Image component */}
-            <Image
+            source={require('../assets/image/question.png')} // 이미지 경로 확인 필요
+           />
+          <Image
             style={styles.stretch2}
-            source={require('../assets/image/danger.png')}  // 느낌표 이미지
+            source={require('../assets/image/danger.png')} // 이미지 경로 확인 필요
           />
+          <Text style={styles.question}>문의 내역</Text>
+          <Text style={styles.danger}>답변 내용</Text>
 
-          <Text style={styles.question}>
-            문의 내역
-          </Text>
-          <Text style={styles.danger}>
-            답변 내용
-          </Text>
-
-          <TouchableOpacity style={styles.buttonQuestion} onPress={() => navigation.navigate("DetailedCheck",{screen:'DetailedCheck'})}>
-            <Text style={styles.interactiveButtonText}>상세확인</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.buttonDanger} onPress={() => navigation.navigate("DetailedCheck",{screen:'DetailedCheck'})}>
-            <Text style={styles.interactiveButtonText}>상세확인</Text>
-          </TouchableOpacity>
+          {/* 문의글 목록을 표시하는 FlatList */}
+          <FlatList
+            data={inquiries}
+            renderItem={renderItem}
+            keyExtractor={item => item.id.toString()}
+          />
         </View>
       </View>
     </>
   );
+};
 
   //   <View style={styles.container}>
   //     {/* FlatList 컴포넌트를 사용하여 문의글 목록을 렌더링합니다. */}
@@ -95,11 +82,9 @@ import { useNavigation } from '@react-navigation/native';
   //     />
   //   </View>
   //  );
-
-};
-
-
-const styles = StyleSheet.create({
+ 
+ 
+  const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
