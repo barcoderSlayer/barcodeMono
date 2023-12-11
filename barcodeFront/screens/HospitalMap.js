@@ -27,8 +27,8 @@ const HospitalMap = () => {
       fetch(`${config.LOCALHOST_IP}/api/hospitals`)
         .then(response => response.json())
         .then(data => {
-          console.log('Hospitals data:', data);
-          setHospitals(data);
+          console.log('hospitals data:', data);
+          setPharmacies(data); // 함수명을 올바르게 수정
         })
         .catch(error => {
           console.error('Error fetching hospitals:', error);

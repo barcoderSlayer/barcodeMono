@@ -1,56 +1,28 @@
 //DetailedCheck.js<답변을 넣을수 있는 문의하기 상세보기 페이지 >
 import React, { useState, useEffect } from 'react';
-
-import {
-  ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Button,
-  StyleSheet,
-  Dimensions,
-  Alert
-} from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, TextInput, Button, StyleSheet, Dimensions, Alert } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import config from '../config'; // config 파일의 정확한 경로를 지정하세요.
 
 const { width, height } = Dimensions.get('window');
 
-
-export default function DetailScreen ()  {
+export default function DetailScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const { inquiryId } = route.params;
-
-
-  const [titleContent, setTitleContent] = useState('');
-  const [inquiryContent, setInquiryContent] = useState('');
-  const [responseContent, setResponseContent] = useState('');
-  const [inquiryTimestamp, setInquiryTimestamp] = useState('');
-  const [responseTimestamp, setResponseTimestamp] = useState('');
-
-  // 예시 데이터  함수
-  useEffect(() => {
-    // 서버로부터 데이터를 받아오는거 구현해야함.
-    //  예시
-    setTitleContent('문의 제목은 여기에 들어갑니다.');
-    setInquiryContent('문의한 내용이 여기에 들어갑니다.');
-    setInquiryTimestamp('2023-10-19T10:00:00Z');
-    setResponseTimestamp('2023-10-20T15:30:00Z');
-  }, []);
-
   const [inquiryDetail, setInquiryDetail] = useState({
     title: '',
     content: '',
     answer: '',
-    created_at: ''
+    created_at: '',
+    updated_at: '',
   });
   const [newResponse, setNewResponse] = useState('');
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://your_backend_ip:3000/api/contact_answer/${inquiryId}`);
+        const response = await fetch(`${config.LOCALHOST_IP}/api/inquiries/${inquiryId}`);
         const data = await response.json();
         if (response.ok) {
           setInquiryDetail(data);
@@ -78,11 +50,9 @@ export default function DetailScreen ()  {
     }).format(date);
   };
 
-
-
   const handleSubmitResponse = async () => {
     try {
-      const response = await fetch(`http://your_backend_ip:3000/api/contact_answer/${inquiryId}`, {
+      const response = await fetch(`${config.LOCALHOST_IP}/api/inquiries/${inquiryId}/answer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +67,8 @@ export default function DetailScreen ()  {
         Alert.alert('Success', 'Response submitted successfully.');
         setInquiryDetail(prevState => ({
           ...prevState,
-          answer: newResponse
+          answer: newResponse,
+          updated_at: new Date().toISOString()
         }));
         setNewResponse('');
       } else {
@@ -111,12 +82,6 @@ export default function DetailScreen ()  {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.titleContainer}>    
-        <Text style={styles.title}>제목</Text>
-        <View style={styles.titleBox}>
-          <Text>{titleContent}</Text>
-        </View>
-      </View>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>{"<"}</Text>
       </TouchableOpacity>
@@ -132,19 +97,12 @@ export default function DetailScreen ()  {
       </View>
       <View style={styles.contentContainer}>
         <Text style={styles.title}>답변 내용</Text>
-
-            <TextInput // 답변 내용 텍스트 입력
-              style={styles.contentInput}
-              multiline={true}  // 여러 줄 입력 가능
-              onChangeText={setResponseContent}  // 입력 내용을 responseContent 상태에 저장
-              value={responseContent}
-              placeholder="답변을 입력하세요"
-            />
-        <Text style={styles.timestamp}>{formatTimestamp(responseTimestamp)}</Text>
         <View style={styles.contentBox}>
           <Text>{inquiryDetail.answer}</Text>
         </View>
-        {/* 기존 답변의 타임스탬프는 데이터에 따라 추가될 수 있음 */}
+        {inquiryDetail.updated_at && (
+          <Text style={styles.timestamp}>{formatTimestamp(inquiryDetail.updated_at)}</Text>
+        )}
       </View>
       <View style={styles.contentContainer}>
         <TextInput
@@ -155,11 +113,11 @@ export default function DetailScreen ()  {
           multiline
         />
         <Button title="Submit Response" onPress={handleSubmitResponse} />
-
       </View>
     </ScrollView>
   );
-};
+}
+
 
 const styles = StyleSheet.create({ 
   container: {
