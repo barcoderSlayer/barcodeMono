@@ -1,20 +1,24 @@
 // Contacting.js <문의하기 페이지>
 import React, { useState } from 'react';
-
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
-
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import config from '../config'; // 경로는 실제 config 파일의 위치에 맞게 조정하세요.
 
 const App = () => {
   const navigation = useNavigation();
   const [inquiryTitle, setInquiryTitle] = useState('');
+ 
   const [inquiryContent, setInquiryContent] = useState('');
-  const [text1Position, setText1Position] = useState({ top: 450, left: 20 }); // 접수된 문의 텍스트 위치 조정
-  const [text2Position, setText2Position] = useState({ top: 495, left: 20 }); // 문의 처리 내역 텍스트 위치 조정
-
-  const moveText1 = () => {
-    setText1Position({ top: text1Position.top + 10, left: text1Position.left + 10 }); 
-  }
 
   const submitInquiry = async () => {
     try {
@@ -47,64 +51,54 @@ const App = () => {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
 
-    <View style={styles.container}>
+	
 
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>{"<"}</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>문의하기</Text>
-      </View>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+              <Text style={styles.backButtonText}>{"<"}</Text>
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>문의하기</Text>
+          </View>
 
+          <View style={styles.content}>
+            <View style={styles.inputArea}>
+              <Text style={styles.inputLabel}>제목</Text>
+              <TextInput
+                style={styles.additionalTextInput}
+                value={inquiryTitle}
+                onChangeText={setInquiryTitle}
+                placeholder="제목을 입력하세요"
+              />
+              <Text style={styles.inputLabel}>내용</Text>
+              <TextInput
+                style={styles.textInput}
+                multiline
+                numberOfLines={4}
+                value={inquiryContent}
+                onChangeText={setInquiryContent}
+                placeholder="내용을 입력하세요"
+              />
+            </View>
 
+            <Text style={[styles.adjustableText, { top: 550, left: 20 }]}>
+              -접수된 문의는 개발자가 확인 후 답변드리겠습니다. 상세한 내용을 기재해주시면 빨리 답변 드릴 수 있습니다.
+            </Text>
+            <Text style={[styles.adjustableText, { top: 600, left: 20 }]}>
+              -문의 처리 내역은 마이페이지 {'>'} 답변확인에서 확인하실 수 있습니다.
+            </Text>
 
-      <View style={styles.content}>
-
-        <View style={styles.menu}>
+            <TouchableOpacity style={styles.submitButton} onPress={submitInquiry}>
+              <Text style={styles.submitButtonText}>확인</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate("Home",{screen:'Home'})}>
+              <Text style={styles.cancelButtonText}>취소</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-
-        <View style={styles.inputArea}>
-          <Text style={styles.inputLabel}>제목</Text>
-
-          <TextInput
-            style={styles.additionalTextInput}
-            value={inquiryTitle}
-            onChangeText={setInquiryTitle}
-            placeholder="제목을 입력하세요"
-          />
-          <Text style={styles.inputLabel}>내용</Text>
-          <TextInput
-            style={styles.textInput}
-            multiline
-            numberOfLines={4}
-            value={inquiryContent}
-            onChangeText={setInquiryContent}
-            placeholder="내용을 입력하세요"
-          />
-      </View>
-
-        <Text style={[styles.adjustableText, { top: 550, left: 20 }]}>
-          -접수된 문의는 개발자가 확인 후 답변드리겠습니다. 상세한 내용을 기재해주시면 빨리 답변 드릴 수 있습니다.
-        </Text>
-        <Text style={[styles.adjustableText, { top: 600, left: 20 }]}>
-          -문의 처리 내역은 마이페이지 {'>'} 답변확인에서 확인하실 수 있습니다.
-        </Text>
-
-
-        {/* Footer or Action Area */}
-        {/* // '확인' 버튼에 submitInquiry 함수 연결 */}
-        <TouchableOpacity style={styles.submitButton} onPress={submitInquiry}>
-          <Text style={styles.submitButtonText}>확인</Text>
-        </TouchableOpacity>
-        {/* Cancel Button */}
-        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate("Home",{screen:'Home'})}>
-          <Text style={styles.cancelButtonText}>취소</Text>
-        </TouchableOpacity>
-
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };
