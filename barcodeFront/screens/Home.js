@@ -87,12 +87,12 @@ export default class Home extends Component {
             </View>
           </TouchableOpacity>
           <View style={styles.categoryContainer}>
-            <Text style={styles.categoryTitle}>편의점</Text>
+            <Text style={styles.categoryTitle}>게시판</Text>
           </View>
           <TouchableOpacity onPress={() => navigation.navigate("ConvenienceTip",{screen:'ConvenienceTip'})}>
             <View style={styles.tipTextContainer}>
               <Text style={styles.tipText}>
-                <Text style={{ marginLeft: 40 }}>             편의점 팁 보러가기                  {'>'}</Text> 
+                <Text style={{ marginLeft: 40 }}>             게시판 보러가기                  {'>'}</Text> 
               </Text>
             </View>
           </TouchableOpacity>

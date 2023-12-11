@@ -113,10 +113,10 @@ const HomeStackNavigator = () => {
                 }}
             />
             <Stack.Screen 
-                name="ConvenienceTip" 
+                name="AnswerCheck" 
                 component={ConvenienceTip}
                 options={{
-                    title: '편의점팁',
+                    title: '게시판',
                     headerStyle: {
                         backgroundColor: '#ADA4A5', // 헤더의 배경색을 흰색으로 설정
                     },
