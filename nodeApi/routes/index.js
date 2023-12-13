@@ -301,6 +301,7 @@ async function increaseScanCount(barcodeNum) {
     }
 }
 
+//jsdom 리더빌리티 :> 이성철 교수님 추천
 //사이트 서버에서 이미지 소스 크롤링
 async function getImgUrl(barcodeNumData){
     let imageUrl = null;
